@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "subtle-osprey-403915",
+  "private_key_id": "6524e89868e1464f8f79b0c230f2812904395959",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDpFkJuxn2IuzDx\nMYTM6WwpawGJqle4LpsG+UsTclinvGn/VYrJFZ4qx5+SJE6OniELnTvw++0d7SYp\n156zwnEeGukwLL79vMJrGB1Wecl3Y72F5u5senJEJcOhnItMWZfwF2oP0T1HvscZ\ntVGN4gD6dfxIlrZ2hW9jxxQ9JqIamjNCcMiNhPeGJxO2xvW7JEJ5rx/s973TYTkQ\nkIjhq031KWFUx+/EwkoXw2Uw0p/Ba91tHsVsZBdPDeDXKLU7a8dBlM51C7XzRflQ\n/QcPNl5VPif3P8fZEpj/+qVZpv5bx4Xes0mww1TU8BCJiiwAnB/scnBoNrgUptQz\nwtyL/USfAgMBAAECggEACHFHAVwS4SEanDb1c02yBwNLtKUfLxRVzOPRsbxOxgZi\njcD/2U4UjnyTWUfN1M1qo6J2jdiS4T2ox/xiloHJa1/eP76XKmJx2fIAy3zUD5jC\nBewXLEA+OtdmDl/+mO2WvcMzWQkL637uovazAOzuHYFi+bKnEPi+8s2QHz1EN2U0\nSIF02TnOzKualW3QKBFdxqkeuUBZQl/yRAVMU3X82E2edu1CoGIHXAGE9P8NEiwg\nlcH6kuzc/cfh8BnOOa8tvw8fVRGefD8tgrTtPd1036TAjnYNsrE+4DEuiwODzKGg\nzMl3r3hq8M4wVt3ChohgJ3JYgUS5danjwnn5Cu+UWQKBgQD2IPTGGQaj1TIEpobu\nTkNmbnCQYb+JSfIffM/G+zbCaR51Tf+vyOlyTAxMy5ldv429Y8J4stQpKx21eoks\npLnR+/ordIhXQz9Vg/iy0R8NRSrh7e/PzISmY8juWzxg8fAvHMLatUznMtNEIpwe\nd4CrjaiOWgBgFlcHq46dwkREaQKBgQDyb2a3UPnWG5yker5hSvVleZsR8AmG1n3h\nEJ76rCGPPwLBdP7Rmn191Zxfj86TtJH/dcmAVtEuQOc+YPCtKLkWmE0ZEmaunsmU\n3e+OCSRop8fCpyvS2ambiCc+QTXk01TWwmaKrP++kQ3YpXgrjbnQnd+H47dU1rgo\nQk9dw5x/xwKBgQDqKdqW6dJeZoQq1oBDEySevG3Nf6HprPd1K5rGVdT4S2hV9DpR\ndJVdT6rYGVA1V/wy9klb6c9dx46BTS5a0fGULOYLF9hrJSiJZIBlJ/4h8u9keaoR\niiOd5guRci3UkfmP6Q4dZCXhRIKpLUBY4BsDnEeD/26h/D8apgaOYvfuGQKBgQDt\neXogL03LERkLdMBwBUEDuW7Qz1RFpG2BvQo9eccVzh8g6T2Ci9ZJIKkgYnlz7fjl\nR7et41zb9e+OBt86fx1uqJk86e1zN082Z390njfv3Ams/pvK2jNtip0GOlJUZz4/\ncAWJ6ZRKU0RA5zUjVJyjYUHIlqLKk9modevQaQAvmQKBgGWCoK7XgS85BsHAwrDp\nokI7NKOlQBoZqunsizW0NMSgt0qY1rLYSLJlUrJXH31cgWtKZX42FBGzK1PBk0Jj\n7KUFY2aL2uTxacj2l+aV3G6nJOK11VPq+V6t4hY8e5Z1Ci/Ad6eTD8TlwQWQv9c+\nBKzO+DxAnLcwm1n65Rza4HnV\n-----END PRIVATE KEY-----\n",
+  "client_email": "euphoria-meet-integration@subtle-osprey-403915.iam.gserviceaccount.com",
+  "client_id": "108668836493524834116",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/euphoria-meet-integration%40subtle-osprey-403915.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

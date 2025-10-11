@@ -144,44 +144,44 @@ def know_more(request):
 #             # Form validation failed
 #             return render(request,"userend/appointment.html",{"form":form})
 # <<< ADD THESE IMPORTS AT THE TOP OF YOUR views.py FILE >>>
-from google.oauth2 import service_account
-from googleapiclient.discovery import build
-from datetime import timedelta
-import os
+# from google.oauth2 import service_account
+# from googleapiclient.discovery import build
+# from datetime import timedelta
+# import os
 
-def create_google_meet_link(summary, start_time, end_time, attendees_emails):
-    """
-    Creates a Google Calendar event with a Meet link.
-    """
-    try:
-        SCOPES = ['https://www.googleapis.com/auth/calendar']
-        SERVICE_ACCOUNT_FILE = os.path.join(os.path.dirname(__file__), '..', 'service_account.json')
+# def create_google_meet_link(summary, start_time, end_time, attendees_emails):
+#     """
+#     Creates a Google Calendar event with a Meet link.
+#     """
+#     try:
+#         SCOPES = ['https://www.googleapis.com/auth/calendar']
+#         SERVICE_ACCOUNT_FILE = os.path.join(os.path.dirname(__file__), '..', 'service_account.json')
 
-        creds = service_account.Credentials.from_service_account_file(
-            SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+#         creds = service_account.Credentials.from_service_account_file(
+#             SERVICE_ACCOUNT_FILE, scopes=SCOPES)
 
-        service = build('calendar', 'v3', credentials=creds)
+#         service = build('calendar', 'v3', credentials=creds)
 
-        event = {
-            'summary': summary,
-            'start': {'dateTime': start_time.isoformat(), 'timeZone': 'Asia/Kolkata'},
-            'end': {'dateTime': end_time.isoformat(), 'timeZone': 'Asia/Kolkata'},
-            'attendees': [{'email': email} for email in attendees_emails],
-            'conferenceData': {
-                'createRequest': {
-                    'requestId': f"{start_time.isoformat()}-{random.randint(1, 100000)}",
-                    'conferenceSolutionKey': {'type': 'hangoutsMeet'}
-                }
-            },
-        }
+#         event = {
+#             'summary': summary,
+#             'start': {'dateTime': start_time.isoformat(), 'timeZone': 'Asia/Kolkata'},
+#             'end': {'dateTime': end_time.isoformat(), 'timeZone': 'Asia/Kolkata'},
+#             'attendees': [{'email': email} for email in attendees_emails],
+#             'conferenceData': {
+#                 'createRequest': {
+#                     'requestId': f"{start_time.isoformat()}-{random.randint(1, 100000)}",
+#                     'conferenceSolutionKey': {'type': 'hangoutsMeet'}
+#                 }
+#             },
+#         }
 
-        # Assuming the first attendee is the counsellor, create the event on their calendar
-        event = service.events().insert(calendarId=attendees_emails[0], body=event, conferenceDataVersion=1).execute()
+#         # Assuming the first attendee is the counsellor, create the event on their calendar
+#         event = service.events().insert(calendarId=attendees_emails[0], body=event, conferenceDataVersion=1).execute()
         
-        return event.get('hangoutLink')
-    except Exception as e:
-        print(f"Error creating Google Meet link: {e}")
-        return None
+#         return event.get('hangoutLink')
+#     except Exception as e:
+#         print(f"Error creating Google Meet link: {e}")
+#         return None
 
 # ... your existing imports and views ...class appointment(LoginRequiredMixin, View):
     # ... your existing static methods (Check_previous_appointment, etc.) are fine ...

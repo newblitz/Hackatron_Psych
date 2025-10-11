@@ -1,4 +1,4 @@
-__pycache__
+__pycache__/
 .env
 service_account.json
 credentials.json
@@ -10,3 +10,4 @@ db.sqlite3
 .env.development.local
 .env.test.local
 .env.production.local
+virtual/
