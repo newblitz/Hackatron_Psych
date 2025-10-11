@@ -24,12 +24,15 @@ class Appointment(models.Model):
     #         name = f"{intern.first_name} {intern.last_name}"
     #         choices.append((intern.id, name))
     #     return choices
-    # Doctor_choices = get_doctor_choices()  # Removed to avoid database access during import
+    
+    meet_link = models.URLField(max_length=500, blank=True, null=True)
+    audio_recording = models.FileField(upload_to='recordings/', blank=True, null=True)# Doctor_choices = get_doctor_choices()  # Removed to avoid database access during import
     gender=[("male","Male"),("female",'Female'),("Prefer not to say","Prefer not to say"),("others","others")]
     time_slot_choices = [("09:00","09:00"),("10:00","10:00"),("11:00","11:00"),("14:00","14:00"),("15:00","15:00"),("16:00","16:00")]
     duration_choices = [("30","30"),("45","45"),("60","60"),("90","90")]
     session_type_choices = [("individual","individual"),("couples","couples"),("family","family"),("group","group")]
     first_name = models.CharField(max_length=100,validators=[RegexValidator(regex=r'^[a-zA-Z\s-]+$',message="Only letters, spaces, and hyphens are allowed.")])
+    room_name = models.CharField(max_length=100, blank=True, null=True, unique=True)
     last_name = models.CharField(max_length=100,validators=[RegexValidator(regex=r'^[a-zA-Z\s-]+$',message="Only letters, spaces, and hyphens are allowed.")])
     # email = models.EmailField(max_length=100,validators=[EmailValidator])
     # phone = models.CharField(max_length=100,validators=[RegexValidator(regex=r'^(\+91)?[6-9]\d{9}$',message="Enter a valid Indian phone number. Either 10 digits or +91 followed by 10 digits.")])
@@ -42,8 +45,8 @@ class Appointment(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     gender=models.CharField(max_length=20,choices=gender,null=True)
     IsPending = models.BooleanField(default=True)
-    meet_link = models.URLField(max_length=500, blank=True, null=True, help_text="Google Meet link for the appointment")
-    meet_link_type = models.CharField(max_length=20, choices=[('genuine', 'Genuine Google Meet')], default='genuine', help_text="Type of meet link generated - only genuine Google Meet links are allowed")
+    # meet_link = models.URLField(max_length=500, blank=True, null=True, help_text="Google Meet link for the appointment")
+    # meet_link_type = models.CharField(max_length=20, choices=[('genuine', 'Genuine Google Meet')], default='genuine', help_text="Type of meet link generated - only genuine Google Meet links are allowed")
     selected_doctor = models.ForeignKey('CounsellorIntern.Psychologist', on_delete=models.CASCADE, related_name='appointments_as_doctor')
     Assigned_doctor = models.ForeignKey('CounsellorIntern.Psychologist', on_delete=models.CASCADE, related_name='appointments_as_assigned_doctor', null=True, blank=True)
     # selected_intern = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='appointments_as_intern', null=True, blank=True, limit_choices_to={'user_type': 'intern'})

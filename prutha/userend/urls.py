@@ -14,6 +14,7 @@ path("appointment/success",views.appointment_success,name="appointment_success")
 path("create_meet_link",views.create_meet_link,name="create_meet_link"),
 path("internship",views.internship.as_view(),name="internship"),
 path("apply-job/<int:pk>",views.ApplyJob.as_view(),name="apply_job"),
+path('webhooks/daily/', daily_webhook_receiver, name='daily_webhook')
 # path("counsellor",views.counsellor.as_view(),name="counsellor"),
 # path("intern",views.intern.as_view(),name="intern"),
 ]

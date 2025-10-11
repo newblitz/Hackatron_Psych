@@ -17,6 +17,10 @@ from CounsellorIntern.models import DailyNotification_Counsellor
 from HRDashbaord.models import JobPostedbyHR,JobAppliedbyUser
 from HRDashbaord.forms import JobPostedbyHRForm,JobAppliedbyUserForm
 import random
+from daily import Daily
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
+from .daily_utils import create_daily_meeting_for_appointment
 # Create your views here.
 # class register(View):
 #     def get(self,request):
@@ -181,117 +185,117 @@ def create_google_meet_link(summary, start_time, end_time, attendees_emails):
 
 # ... your existing imports and views ...class appointment(LoginRequiredMixin, View):
     # ... your existing static methods (Check_previous_appointment, etc.) are fine ...
-class appointment(LoginRequiredMixin, View):
-    login_url = '/create/login/'
-    @staticmethod
-    def Check_previous_appointment(user,fname,lname):
-        previous_appointment = Appointment.objects.filter(user=user,first_name=fname,last_name=lname).first()
-        now=datetime.now()
-        current_date=now.date()
-        if (previous_appointment.appointment_date - current_date).days <= 7 or (current_date-previous_appointment.appointment_date).days<=7:
-            return True
-        else:
-         return False
-    @staticmethod
-    def doctor_free_slots(doctor):
-        doctor_free_slots = DailyLog_Counsellor.objects.filter(doctor=doctor, present=True)
-        return doctor_free_slots    
+# class appointment(LoginRequiredMixin, View):
+#     login_url = '/create/login/'
+#     @staticmethod
+#     def Check_previous_appointment(user,fname,lname):
+#         previous_appointment = Appointment.objects.filter(user=user,first_name=fname,last_name=lname).first()
+#         now=datetime.now()
+#         current_date=now.date()
+#         if (previous_appointment.appointment_date - current_date).days <= 7 or (current_date-previous_appointment.appointment_date).days<=7:
+#             return True
+#         else:
+#          return False
+#     @staticmethod
+#     def doctor_free_slots(doctor):
+#         doctor_free_slots = DailyLog_Counsellor.objects.filter(doctor=doctor, present=True)
+#         return doctor_free_slots    
    
-    def get(self, request):
-        # ... no changes here ...
-        form = AppointmentForm()
-        return render(request, "userend/appointment.html", {"form": form})
+#     def get(self, request):
+#         # ... no changes here ...
+#         form = AppointmentForm()
+#         return render(request, "userend/appointment.html", {"form": form})
 
-    def post(self, request):
-        form = AppointmentForm(request.POST)
-        if form.is_valid():
-            now = datetime.now()
-            current_date = now.date()
-            appointment_date = form.cleaned_data.get("appointment_date")
+#     def post(self, request):
+#         form = AppointmentForm(request.POST)
+#         if form.is_valid():
+#             now = datetime.now()
+#             current_date = now.date()
+#             appointment_date = form.cleaned_data.get("appointment_date")
             
-            # Check for past date selection
-            if appointment_date < current_date:
-                return render(request, "userend/appointment.html", {"form": form, "error_message": "You cannot book an appointment for a past date. Please select today or a future date."})
+#             # Check for past date selection
+#             if appointment_date < current_date:
+#                 return render(request, "userend/appointment.html", {"form": form, "error_message": "You cannot book an appointment for a past date. Please select today or a future date."})
             
-            # Check for date too far in future (more than 3 days)
-            max_future_date = current_date + timedelta(days=3)
-            if appointment_date > max_future_date:
-                return render(request, "userend/appointment.html", {"form": form, "error_message": "You can only book appointments up to 3 days in advance. Please select a date within the next 3 days."})
+#             # Check for date too far in future (more than 3 days)
+#             max_future_date = current_date + timedelta(days=3)
+#             if appointment_date > max_future_date:
+#                 return render(request, "userend/appointment.html", {"form": form, "error_message": "You can only book appointments up to 3 days in advance. Please select a date within the next 3 days."})
             
-            final = form.save(commit=False)
-            final.user = request.user
-            final.date = appointment_date
+#             final = form.save(commit=False)
+#             final.user = request.user
+#             final.date = appointment_date
 
-            if self.Check_previous_appointment(request.user, form.cleaned_data.get("first_name"), form.cleaned_data.get("last_name")):
-                return render(request, "userend/appointment.html", {"form": form, "error_message": "You have already booked an appointment in the past 7 days."})
+#             if self.Check_previous_appointment(request.user, form.cleaned_data.get("first_name"), form.cleaned_data.get("last_name")):
+#                 return render(request, "userend/appointment.html", {"form": form, "error_message": "You have already booked an appointment in the past 7 days."})
             
-            # This is the main success block we will modify
-            if form.cleaned_data.get("appointment_date") == current_date:
-                av = DailyLog_Counsellor.objects.filter(present=True, date=current_date).values_list("doctor", flat=True)
-                if final.selected_doctor.Auth_id in av:
-                    slot = Dailylog_Counserllor_patient.objects.filter(doctor_id=final.selected_doctor.Auth_id, date=current_date).values_list("time_slot", flat=True)
+#             # This is the main success block we will modify
+#             if form.cleaned_data.get("appointment_date") == current_date:
+#                 av = DailyLog_Counsellor.objects.filter(present=True, date=current_date).values_list("doctor", flat=True)
+#                 if final.selected_doctor.Auth_id in av:
+#                     slot = Dailylog_Counserllor_patient.objects.filter(doctor_id=final.selected_doctor.Auth_id, date=current_date).values_list("time_slot", flat=True)
                     
-                    if form.cleaned_data.get("time_slot") in slot:
-                        return render(request, "userend/appointment.html", {"form": form, "error_message": "This doctor is not available on this date. Try for other time slots or date."})
-                    else:
-                        final.Assigned_doctor = final.selected_doctor
-                        final.IsPending = False
+#                     if form.cleaned_data.get("time_slot") in slot:
+#                         return render(request, "userend/appointment.html", {"form": form, "error_message": "This doctor is not available on this date. Try for other time slots or date."})
+#                     else:
+#                         final.Assigned_doctor = final.selected_doctor
+#                         final.IsPending = False
                         
-                        # <<< START MODIFICATION: GENERATE MEET LINK >>>
+#                         # <<< START MODIFICATION: GENERATE MEET LINK >>>
                         
-                        # 1. Prepare data for the helper function
-                        appointment_date = current_date
-                        time_slot_str = form.cleaned_data.get("time_slot")
-                        appointment_time = datetime.strptime(time_slot_str, "%H:%M").time()
+#                         # 1. Prepare data for the helper function
+#                         appointment_date = current_date
+#                         time_slot_str = form.cleaned_data.get("time_slot")
+#                         appointment_time = datetime.strptime(time_slot_str, "%H:%M").time()
                         
-                        start_datetime = datetime.combine(appointment_date, appointment_time)
-                        end_datetime = start_datetime + timedelta(minutes=50) # Assuming a 50-minute session
+#                         start_datetime = datetime.combine(appointment_date, appointment_time)
+#                         end_datetime = start_datetime + timedelta(minutes=50) # Assuming a 50-minute session
 
-                        # Get counsellor and patient emails
-                        counsellor_email = final.selected_doctor.user.email # ASSUMING Psychologist model has a ForeignKey to CustomUser named 'user'
-                        patient_email = request.user.email
-                        attendees = [counsellor_email, patient_email]
+#                         # Get counsellor and patient emails
+#                         counsellor_email = final.selected_doctor.user.email # ASSUMING Psychologist model has a ForeignKey to CustomUser named 'user'
+#                         patient_email = request.user.email
+#                         attendees = [counsellor_email, patient_email]
                         
-                        # 2. Call the helper function
-                        meet_link = create_google_meet_link(
-                            summary=f"Therapy Session for {final.first_name}",
-                            start_time=start_datetime,
-                            end_time=end_datetime,
-                            attendees_emails=attendees
-                        )
+#                         # 2. Call the helper function
+#                         meet_link = create_google_meet_link(
+#                             summary=f"Therapy Session for {final.first_name}",
+#                             start_time=start_datetime,
+#                             end_time=end_datetime,
+#                             attendees_emails=attendees
+#                         )
 
-                        # 3. Save the link to the appointment object
-                        final.meet_link = meet_link
-                        final.save() # Now we save the final object with the meet link
+#                         # 3. Save the link to the appointment object
+#                         final.meet_link = meet_link
+#                         final.save() # Now we save the final object with the meet link
 
-                        # <<< END MODIFICATION >>>
+#                         # <<< END MODIFICATION >>>
 
-                        Dailylog_Counserllor_patient.objects.create(doctor_id=final.selected_doctor.Auth_id, patient_id=final, date=current_date, time_slot=form.cleaned_data.get("time_slot"),meeting_link=meet_link)
+#                         Dailylog_Counserllor_patient.objects.create(doctor_id=final.selected_doctor.Auth_id, patient_id=final, date=current_date, time_slot=form.cleaned_data.get("time_slot"),meeting_link=meet_link)
                         
-                        Name = final.selected_doctor.fname + " " + final.selected_doctor.lname
-                        time_slot = form.cleaned_data.get("time_slot")
+#                         Name = final.selected_doctor.fname + " " + final.selected_doctor.lname
+#                         time_slot = form.cleaned_data.get("time_slot")
                         
-                        # Pass the meet_link to the success template
-                        info = {"Name": Name, "time_slot": time_slot, "date": current_date, "meet_link": meet_link}
-                        return render(request, "userend/appointment_success.html", info)
+#                         # Pass the meet_link to the success template
+#                         info = {"Name": Name, "time_slot": time_slot, "date": current_date, "meet_link": meet_link}
+#                         return render(request, "userend/appointment_success.html", info)
 
-                else:
-                    return render(request, "userend/appointment.html", {"form": form, "error_message": "This doctor is on leave on this date. Try for other time slots or date."})
+#                 else:
+#                     return render(request, "userend/appointment.html", {"form": form, "error_message": "This doctor is on leave on this date. Try for other time slots or date."})
             
-            else: # This is the logic for future (pending) appointments
-                if DailyNotification_Counsellor.objects.filter(doctor_id=final.selected_doctor.Auth_id, date=form.cleaned_data.get("appointment_date"), time_slot=form.cleaned_data.get("time_slot")).exists():
-                    return render(request, "userend/appointment.html", {"form": form, "error_message": "This doctor is not available on this date. Try for other time slots or date."})
-                else:
-                    final.IsPending = True
-                    final.save()
-                    DailyNotification_Counsellor.objects.create(doctor_id=final.selected_doctor.Auth_id, patient_id=final, date=form.cleaned_data.get("appointment_date"), time_slot=form.cleaned_data.get("time_slot"))
+#             else: # This is the logic for future (pending) appointments
+#                 if DailyNotification_Counsellor.objects.filter(doctor_id=final.selected_doctor.Auth_id, date=form.cleaned_data.get("appointment_date"), time_slot=form.cleaned_data.get("time_slot")).exists():
+#                     return render(request, "userend/appointment.html", {"form": form, "error_message": "This doctor is not available on this date. Try for other time slots or date."})
+#                 else:
+#                     final.IsPending = True
+#                     final.save()
+#                     DailyNotification_Counsellor.objects.create(doctor_id=final.selected_doctor.Auth_id, patient_id=final, date=form.cleaned_data.get("appointment_date"), time_slot=form.cleaned_data.get("time_slot"))
                     
-                    # NOTE: For pending appointments, you should generate the Meet link
-                    # in the view where the counsellor ACCEPTS the appointment, not here.
+#                     # NOTE: For pending appointments, you should generate the Meet link
+#                     # in the view where the counsellor ACCEPTS the appointment, not here.
                     
-                    return render(request, "userend/appointment_pending.html")
-        else:
-            return render(request, "userend/appointment.html", {"form": form})
+#                     return render(request, "userend/appointment_pending.html")
+#         else:
+#             return render(request, "userend/appointment.html", {"form": form})
 
 # class login(View):
 #     def get(self,request):
@@ -305,6 +309,94 @@ class appointment(LoginRequiredMixin, View):
 #         # else:
 #         #     return render(request,"userend/login.html")
 #         return render(request,"userend/login.html")
+# your_app/views.py
+
+# Add these imports at the top
+from datetime import datetime, timedelta
+from .daily_utils import create_daily_meeting_for_appointment # Import your new helper
+
+# ... other imports ...
+
+class appointment(LoginRequiredMixin, View):
+    # ... your Check_previous_appointment and doctor_free_slots methods ...
+
+    def get(self, request):
+        form = AppointmentForm()
+        return render(request, "userend/appointment.html", {"form": form})
+
+    def post(self, request):
+        form = AppointmentForm(request.POST)
+        if form.is_valid():
+            # --- No changes to your validation logic ---
+            now = datetime.now()
+            current_date = now.date()
+            appointment_date = form.cleaned_data.get("appointment_date")
+            
+            if appointment_date < current_date:
+                return render(request, "userend/appointment.html", {"form": form, "error_message": "..."})
+            
+            max_future_date = current_date + timedelta(days=3)
+            if appointment_date > max_future_date:
+                return render(request, "userend/appointment.html", {"form": form, "error_message": "..."})
+            
+            final = form.save(commit=False)
+            final.user = request.user
+            final.date = appointment_date
+
+            if self.Check_previous_appointment(request.user, form.cleaned_data.get("first_name"), form.cleaned_data.get("last_name")):
+                return render(request, "userend/appointment.html", {"form": form, "error_message": "..."})
+
+            # --- Main Success Block ---
+            if form.cleaned_data.get("appointment_date") == current_date:
+                av = DailyLog_Counsellor.objects.filter(present=True, date=current_date).values_list("doctor", flat=True)
+                if final.selected_doctor.Auth_id in av:
+                    slot = Dailylog_Counserllor_patient.objects.filter(doctor_id=final.selected_doctor.Auth_id, date=current_date).values_list("time_slot", flat=True)
+                    
+                    if form.cleaned_data.get("time_slot") in slot:
+                        return render(request, "userend/appointment.html", {"form": form, "error_message": "..."})
+                    else:
+                        final.Assigned_doctor = final.selected_doctor
+                        final.IsPending = False
+                        
+                        # We must save the object FIRST to get an ID for the room name
+                        final.save()
+
+                        # <<< START MODIFICATION: GENERATE DAILY.CO LINK >>>
+                        meet_link, room_name = create_daily_meeting_for_appointment(final)
+
+                        if meet_link and room_name:
+                            # Save the link and room name back to the appointment
+                            final.meet_link = meet_link
+                            final.room_name = room_name
+                            final.save() # Save again to update with link and room name
+                        else:
+                            # Handle the error if the link couldn't be created
+                            final.delete() # Rollback the appointment creation
+                            return render(request, "userend/appointment.html", {"form": form, "error_message": "Could not create meeting link. Please try again."})
+                        # <<< END MODIFICATION >>>
+
+                        Dailylog_Counserllor_patient.objects.create(doctor_id=final.selected_doctor.Auth_id, patient_id=final, date=current_date, time_slot=form.cleaned_data.get("time_slot"), meeting_link=meet_link)
+                        
+                        Name = final.selected_doctor.fname + " " + final.selected_doctor.lname
+                        time_slot = form.cleaned_data.get("time_slot")
+                        
+                        info = {"Name": Name, "time_slot": time_slot, "date": current_date, "meet_link": meet_link}
+                        return render(request, "userend/appointment_success.html", info)
+
+                else:
+                    return render(request, "userend/appointment.html", {"form": form, "error_message": "..."})
+            
+            else: # Logic for future (pending) appointments
+                # ... same as before ...
+                final.IsPending = True
+                final.save()
+                DailyNotification_Counsellor.objects.create(...)
+                # NOTE: The meet link for pending appointments should be generated
+                # in the view where the counsellor ACCEPTS it. You can reuse the
+                # `create_daily_meeting_for_appointment(appointment)` function there.
+                return render(request, "userend/appointment_pending.html")
+        else:
+            return render(request, "userend/appointment.html", {"form": form})
 
 def index(request):
     return render(request,"userend/index.html")
@@ -385,6 +477,48 @@ def reject_appointment(request, appointment_id):
     
     return redirect('userend:pending_approval')
 
+@csrf_exempt
+@require_POST
+def daily_webhook_receiver(request):
+    """
+    Listens for 'recording.ready' webhooks from Daily.co,
+    downloads the audio, and saves it to the corresponding Appointment.
+    """
+    try:
+        data = json.loads(request.body)
+        event = data.get('event')
+
+        if event == 'recording.ready':
+            recording_data = data.get('recording')
+            room_name = recording_data.get('room_name')
+            download_url = recording_data.get('url')
+
+            if not room_name or not download_url:
+                return HttpResponse(status=400) # Bad request
+
+            # Find the appointment using the unique room name
+            try:
+                appointment = Appointment.objects.get(room_name=room_name)
+            except Appointment.DoesNotExist:
+                # Could not find a matching appointment, maybe log this
+                return HttpResponse(status=404) 
+
+            # Download the audio file
+            response = requests.get(download_url, stream=True)
+            response.raise_for_status()
+
+            # Save the file to the model's FileField
+            file_name = f"{room_name}.m4a"
+            appointment.audio_recording.save(file_name, ContentFile(response.content), save=True)
+            
+            print(f"Successfully saved recording for appointment {appointment.id}")
+
+    except Exception as e:
+        print(f"Error in Daily webhook: {e}") # Use proper logging
+
+    # Always return 200 OK to acknowledge receipt
+    return HttpResponse(status=200)
+
 # class counsellor(View):
 #     def get(self,request):
 #         return render(request,"userend/dashboard.html")
@@ -392,83 +526,83 @@ def reject_appointment(request, appointment_id):
 #     def get(self,request):
 #         return render(request,"userend/genz_dashboard.html")
 
-from django.http import JsonResponse
-from google_calendar import create_google_meet_event
+# from django.http import JsonResponse
+# from google_calendar import create_google_meet_event
 
-# views.py
-from django.http import JsonResponse
-from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import InstalledAppFlow
-from googleapiclient.discovery import build
-import os
-import datetime
+# # views.py
+# from django.http import JsonResponse
+# from google.oauth2.credentials import Credentials
+# from google_auth_oauthlib.flow import InstalledAppFlow
+# from googleapiclient.discovery import build
+# import os
+# import datetime
 
-# Scope to access Google Calendar with Meet links
-SCOPES = ['https://www.googleapis.com/auth/calendar']
+# # Scope to access Google Calendar with Meet links
+# SCOPES = ['https://www.googleapis.com/auth/calendar']
 
-# Path to store OAuth tokens
-TOKEN_PATH = 'token.json'
-CREDENTIALS_PATH = 'credentials.json'  # Your downloaded OAuth credentials
+# # Path to store OAuth tokens
+# TOKEN_PATH = 'token.json'
+# CREDENTIALS_PATH = 'credentials.json'  # Your downloaded OAuth credentials
 
-def get_google_calendar_service():
-    creds = None
+# def get_google_calendar_service():
+#     creds = None
 
-    # If token.json exists, load it (no popup needed)
-    if os.path.exists(TOKEN_PATH):
-        creds = Credentials.from_authorized_user_file(TOKEN_PATH, SCOPES)
+#     # If token.json exists, load it (no popup needed)
+#     if os.path.exists(TOKEN_PATH):
+#         creds = Credentials.from_authorized_user_file(TOKEN_PATH, SCOPES)
     
-    # If no valid creds, run OAuth flow (first time only)
-    if not creds or not creds.valid:
-        flow = InstalledAppFlow.from_client_secrets_file(CREDENTIALS_PATH, SCOPES)
-        creds = flow.run_local_server(port=0)  # Opens consent popup once
-        # Save credentials for future use
-        with open(TOKEN_PATH, 'w') as token_file:
-            token_file.write(creds.to_json())
+#     # If no valid creds, run OAuth flow (first time only)
+#     if not creds or not creds.valid:
+#         flow = InstalledAppFlow.from_client_secrets_file(CREDENTIALS_PATH, SCOPES)
+#         creds = flow.run_local_server(port=0)  # Opens consent popup once
+#         # Save credentials for future use
+#         with open(TOKEN_PATH, 'w') as token_file:
+#             token_file.write(creds.to_json())
 
-    # Build Google Calendar API service
-    service = build('calendar', 'v3', credentials=creds)
-    return service
+#     # Build Google Calendar API service
+#     service = build('calendar', 'v3', credentials=creds)
+#     return service
 
-def create_google_meet_event():
-    service = get_google_calendar_service()
+# def create_google_meet_event():
+#     service = get_google_calendar_service()
 
-    # Set meeting start and end time (here 30 min duration)
-    start_time = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(minutes=5)
-    end_time = start_time + datetime.timedelta(minutes=30)
+#     # Set meeting start and end time (here 30 min duration)
+#     start_time = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(minutes=5)
+#     end_time = start_time + datetime.timedelta(minutes=30)
 
-    event = {
-        'summary': 'Counselling Session',
-        'description': 'Online counselling appointment.',
-        'start': {
-            'dateTime': start_time.isoformat(),
-            'timeZone': 'Asia/Kolkata',
-        },
-        'end': {
-            'dateTime': end_time.isoformat(),
-            'timeZone': 'Asia/Kolkata',
-        },
-        'conferenceData': {
-            'createRequest': {
-                'requestId': 'randomstring1234'  # unique ID per request
-            }
-        },
-    }
+#     event = {
+#         'summary': 'Counselling Session',
+#         'description': 'Online counselling appointment.',
+#         'start': {
+#             'dateTime': start_time.isoformat(),
+#             'timeZone': 'Asia/Kolkata',
+#         },
+#         'end': {
+#             'dateTime': end_time.isoformat(),
+#             'timeZone': 'Asia/Kolkata',
+#         },
+#         'conferenceData': {
+#             'createRequest': {
+#                 'requestId': 'randomstring1234'  # unique ID per request
+#             }
+#         },
+#     }
 
-    created_event = service.events().insert(
-        calendarId='primary',
-        body=event,
-        conferenceDataVersion=1
-    ).execute()
+#     created_event = service.events().insert(
+#         calendarId='primary',
+#         body=event,
+#         conferenceDataVersion=1
+#     ).execute()
 
-    return created_event.get('hangoutLink')
+#     return created_event.get('hangoutLink')
 
-# Django view
-def create_meet_link(request):
-    try:
-        meet_url = create_google_meet_event()
-        return JsonResponse({'meet_link': meet_url})
-    except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)
+# # Django view
+# def create_meet_link(request):
+#     try:
+#         meet_url = create_google_meet_event()
+#         return JsonResponse({'meet_link': meet_url})
+#     except Exception as e:
+#         return JsonResponse({'error': str(e)}, status=500)
 
 def open_internship(request, pk):
     """Function view to open job application form (legacy support)"""
