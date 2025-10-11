@@ -84,9 +84,9 @@
                         <span class="material-symbols-outlined text-lg">dashboard</span>
                         Dashboard
                     </a>
-                    <a href="{% url 'userend:appointment' %}" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 font-medium">
+                    <a href="{% url 'Counsellordashboard:appointments' %}" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 font-medium">
                         <span class="material-symbols-outlined text-lg">event</span>
-                        Appointment
+                        My Appointments
                     </a>
                     <a href="#" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 font-medium">
                         <span class="material-symbols-outlined text-lg">school</span>
@@ -133,10 +133,10 @@
                     <div class="flex items-center gap-4">
                         <div class="px-4 py-2 bg-yellow-100 text-yellow-800 rounded-lg">
                             <span class="material-symbols-outlined text-sm mr-2">pending_actions</span>
-                            {{ pending_count }} Pending
+                            {{ pending_appointments.count }} Pending
                         </div>
-                        <button class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
-                            <span class="material-symbols-outlined text-sm mr-2">refresh</span>
+                        <button onclick="location.reload()" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors flex items-center gap-2">
+                            <span class="material-symbols-outlined text-sm">refresh</span>
                             Refresh
                         </button>
                     </div>

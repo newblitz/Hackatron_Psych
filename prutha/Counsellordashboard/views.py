@@ -1,8 +1,8 @@
 from django.shortcuts import render,redirect
 from django.views import View
 from django.utils import timezone
-from CounsellorIntern.forms import DailyLog_CounsellorFormpopup
-from CounsellorIntern.models import DailyLog_Counsellor,DailyNotification_Counsellor
+from CounsellorIntern.forms import DailyLog_CounsellorFormpopup,DailyCousellorForm
+from CounsellorIntern.models import DailyLog_Counsellor,DailyNotification_Counsellor,Dailylog_Counserllor_patient
 from .forms import DailyNotification_CounsellorForm
 from userend.models import Appointment
 from loging.email_service import email_service
@@ -189,4 +189,56 @@ class Notification_approval(View):
         
         return redirect('Counsellordashboard:pending_approval')
 
-                       
+class CounsellorAppointments(View):
+    def get(self, request):
+        # Check if user is authenticated and is a counsellor
+        if not request.user.is_authenticated:
+            return redirect('loging:login')
+        
+        if request.user.user_type != 'Counsellor':
+            # Redirect non-counsellors to appropriate dashboard
+            if request.user.user_type == 'Patient':
+                return redirect('userend:appointment')
+            else:
+                return redirect('loging:login')
+        current_date = timezone.now().date()
+        current_datetime = timezone.now()
+        
+        # Get approved appointments for this counsellor
+        
+        approved_appointments = Dailylog_Counserllor_patient.objects.filter(doctor_id=request.user,date=current_date,completed=False).order_by('time_slot')
+        timed_appointments = []
+        for appointment in approved_appointments:
+            if current_datetime.time() <= datetime.strptime(appointment.time_slot, "%H:%M").time():
+                timed_appointments.append(appointment)
+        # DailyCousellingForm = DailyCousellorForm()
+        list_of_appointments = []
+        for appointment in timed_appointments:
+            name=f"{appointment.patient_id.first_name} {appointment.patient_id.last_name}"
+            DailyCousellingForm = DailyCousellorForm(instance=appointment,initial={'name':name})
+            list_of_appointments.append({
+                'form': DailyCousellingForm,
+                'appointment': appointment,
+                'patient': appointment.patient_id
+            })
+        return render(request, "Counsellordashborad/appointmentofcounsellor.html", {
+            "approved_appointments": list_of_appointments
+        })
+
+    def post(self, request):
+        if request.POST.get("completed"):
+            appointment_id = request.POST.get("appointment_id")
+            appointment = Dailylog_Counserllor_patient.objects.get(id=appointment_id)
+            appointment.completed = True
+            appointment.save()
+            return redirect('Counsellordashboard:appointments')
+
+        # appointment_id = request.POST.get("appointment_id")
+        # action = request.POST.get("action")
+        # if appointment_id and action:
+        #     try:
+        #         appointment = Dailylog_Counserllor_patient.objects.get(id=appointment_id)
+        #         appointment.completed = True
+        #         appointment.save()
+        #     except Dailylog_Counserllor_patient.DoesNotExist:
+        #         pass
