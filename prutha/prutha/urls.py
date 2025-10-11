@@ -31,3 +31,11 @@ urlpatterns = [
     path("counsellor-dashboard/", include("Counsellordashboard.urls", namespace="Counsellordashboard")),
     path("hr/", include("HRDashbaord.urls", namespace="HRDashbaord")),
 ]
+
+# Serve media files in development
+if settings.DEBUG:
+    urlpatterns += [
+        re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
+        # Handle old resume path for backward compatibility
+        re_path(r'^resumes/(?P<path>.*)$', serve, {'document_root': os.path.join(settings.BASE_DIR, 'resumes')}),
+    ]
