@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "CounsellorIntern",
     "Counsellordashboard",
     "Internordashboard",
+    "HRDashbaord",
 ]
 
 MIDDLEWARE = [
@@ -154,3 +155,6 @@ SENDGRID_SANDBOX_MODE_IN_DEBUG = False
 # EMAIL_HOST_USER = 'apikey'
 # EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
 # EMAIL_USE_TLS = True
+ZOOM_ACCOUNT_ID = os.environ.get("ZOOM_ACCOUNT_ID")
+ZOOM_CLIENT_ID = os.environ.get("ZOOM_CLIENT_ID")
+ZOOM_CLIENT_SECRET = os.environ.get("ZOOM_CLIENT_SECRET")

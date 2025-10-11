@@ -29,4 +29,5 @@ urlpatterns = [
     path("create/", include("loging.urls",namespace="loging")),
     path("counsellor/", include("CounsellorIntern.urls", namespace="CounsellorIntern")),
     path("counsellor-dashboard/", include("Counsellordashboard.urls", namespace="Counsellordashboard")),
+    path("hr/", include("HRDashbaord.urls", namespace="HRDashbaord")),
 ]
