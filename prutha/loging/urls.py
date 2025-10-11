@@ -16,4 +16,5 @@ urlpatterns = [
     path("redirect/", views.redirect_view.as_view(), name="redirect"),
     path("counsellor/", views.counsellor.as_view(), name="counsellor"),
     path("intern/", views.intern.as_view(), name="intern"),
+    path("hr/", views.hr.as_view(), name="hr_dashboard"),
 ]

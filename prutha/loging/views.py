@@ -7,7 +7,8 @@ from django.db import IntegrityError
 from .forms import EmailForm, CompleteRegistrationForm, OTPVerificationForm
 from .models import CustomUser, EmailVerification
 from .email_service import email_service
-from CounsellorIntern.models import DailyLog_Counsellor
+from CounsellorIntern.models import DailyLog_Counsellor, Dailylog_Counserllor_patient
+from HRDashbaord.models import JobPostedbyHR, JobAppliedbyUser
 from django.utils import timezone
 from django.contrib.auth.mixins import LoginRequiredMixin
 import random
@@ -49,9 +50,13 @@ class CreateAccount(View):
             )
             
             # Send OTP email
-            print(f"DEBUG: Attempting to send OTP {otp} to {email}")
-            email_sent = self.send_verification_email(email, otp)
-            print(f"DEBUG: Email sending result: {email_sent}")
+            if CustomUser.objects.filter(email=email).exists():
+                messages.error(request, 'An account with this email already exists. Please use a different email or try logging in.')
+                return render(request, "loging/registerwith.html", {"form": form})
+            else:
+                print(f"DEBUG: Attempting to send OTP {otp} to {email}")
+                email_sent = self.send_verification_email(email, otp)
+                print(f"DEBUG: Email sending result: {email_sent}")
             
             if email_sent:
                 messages.success(request, f'Verification code sent to {email}')
@@ -194,11 +199,11 @@ class CompleteRegistration(View):
             except IntegrityError:
                 messages.error(request, 'An account with this username already exists. Please use a different username.')
                 return render(request, "loging/complete_registration.html", {"form": form, "email": email})
-        else:
-            # Display form validation errors
-            for field, errors in form.errors.items():
-                for error in errors:
-                    messages.error(request, f'{field}: {error}')
+            else:
+                # Display form validation errors
+                for field, errors in form.errors.items():
+                    for error in errors:
+                        messages.error(request, f'{field}: {error}')
             return render(request, "loging/complete_registration.html", {"form": form, "email": email})
 
 class redirect_view(LoginRequiredMixin,View):
@@ -206,7 +211,7 @@ class redirect_view(LoginRequiredMixin,View):
         if hasattr(request.user, 'user_type'):
             if request.user.user_type == "Counsellor":
                 date = timezone.now().date()
-                if DailyLog_Counsellor.objects.filter(doctor=request.user.id,date=date).exists():
+                if DailyLog_Counsellor.objects.filter(doctor=request.user,date=date).exists():
                      return redirect(reverse_lazy("loging:counsellor"))
                 else:
                     return redirect(reverse_lazy("CounsellorIntern:daily_log_popup"))
@@ -214,8 +219,65 @@ class redirect_view(LoginRequiredMixin,View):
                 return redirect(reverse_lazy("userend:home"))
             elif request.user.user_type == "intern":
                 return redirect(reverse_lazy("loging:intern"))
+            elif request.user.user_type == "HR":
+                return redirect(reverse_lazy("loging:hr_dashboard"))
         return redirect(reverse_lazy("userend:home"))
 
+class hr(View):
+    def get(self, request):
+        # Check if user is authenticated and is HR
+        if not request.user.is_authenticated:
+            return redirect('loging:loginView')
+        
+        if request.user.user_type != 'HR':
+            # Redirect non-HR users to appropriate dashboard
+            if request.user.user_type == 'Counsellor':
+                return redirect('loging:counsellor')
+            elif request.user.user_type == 'patient':
+                return redirect('userend:home')
+            else:
+                return redirect('loging:loginView')
+        
+        today_date = timezone.now().date()
+        
+        # Get statistics for HR dashboard
+        # Get all counsellor doctors
+        all_counsellors = CustomUser.objects.filter(user_type='Counsellor')
+        total_counsellors = all_counsellors.count()
+        
+        # Get doctors who marked themselves present today
+        present_doctors = DailyLog_Counsellor.objects.filter(date=today_date, present=True).count()
+        
+        # Get doctors who marked themselves absent today
+        absent_doctors = DailyLog_Counsellor.objects.filter(date=today_date, present=False).count()
+        
+        # Calculate total absent (explicitly absent + not logged in)
+        no_of_doctor_present = present_doctors
+        no_of_doctor_absent = absent_doctors + (total_counsellors - present_doctors - absent_doctors)
+        
+        # Get appointment statistics
+        no_of_appointmet_completed = Dailylog_Counserllor_patient.objects.filter(date=today_date, completed=True).count()
+        no_of_appointmet_scheduled = Dailylog_Counserllor_patient.objects.filter(date=today_date, completed=False).count()
+        
+        # Get job application counts for active postings (expiring in next 2+ weeks)
+        job_count = []
+        job_id_list = JobPostedbyHR.objects.filter(
+            last_date_to_apply__gte=today_date + timedelta(weeks=2)
+        ).values_list('id', flat=True)
+        
+        for job_id in job_id_list:
+            count = JobAppliedbyUser.objects.filter(job_id=job_id).count()
+            name = JobPostedbyHR.objects.get(id=job_id).job_title
+            job_count.append({"count": count, "name": name})
+        
+        return render(request, "userend/hr_dashboard.html", {
+            "no_of_doctor_absent": no_of_doctor_absent,
+            "no_of_doctor_present": no_of_doctor_present,
+            "no_of_appointmet_completed": no_of_appointmet_completed,
+            "no_of_appointmet_scheduled": no_of_appointmet_scheduled,
+            "job_count": job_count
+        })
+        
 def logout_view(request):
     logout(request)
     messages.success(request, 'You have been successfully logged out.')
@@ -223,7 +285,31 @@ def logout_view(request):
 
 class counsellor(View):
     def get(self, request):
-        return render(request, "userend/dashboard.html")
+        # Check if user is authenticated and is a counsellor
+        if not request.user.is_authenticated:
+            return redirect('loging:login')
+        
+        if request.user.user_type != 'Counsellor':
+            # Redirect non-counsellors to appropriate dashboard
+            if request.user.user_type == 'Patient':
+                return redirect('userend:appointment')
+            else:
+                return redirect('loging:login')
+        user = request.user
+        current_date = timezone.now().date()
+        
+        # Get statistics for counsellor dashboard
+        dailypatient_count_remaining = Dailylog_Counserllor_patient.objects.filter(doctor_id=request.user,date=current_date,completed=False).count()
+        daily_patient_count_completed = Dailylog_Counserllor_patient.objects.filter(doctor_id=request.user,date=current_date,completed=True).count()
+        this_week_total_sessions=Dailylog_Counserllor_patient.objects.filter(doctor_id=request.user,date__week=timezone.now().isocalendar()[1],completed=True).count()
+        Recent_appointments=Dailylog_Counserllor_patient.objects.filter(doctor_id=request.user,date=current_date).order_by('time_slot')[:2]
+        dip={
+            "dailypatient_count_remaining": dailypatient_count_remaining,
+            "daily_patient_count_completed": daily_patient_count_completed,
+            "this_week_total_sessions": this_week_total_sessions,
+            "Recent_appointments": Recent_appointments
+        }
+        return render(request, "userend/dashboard.html",dip)
 
 class intern(View):
     def get(self, request):

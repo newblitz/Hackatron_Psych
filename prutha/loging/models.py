@@ -44,6 +44,7 @@ class CustomUser(AbstractUser):
         ("Counsellor", "Counsellor"),
         ("patient", "Patient"),
         ("intern", "intern"),
+        ("HR", "HR"),
     ]
     email = models.EmailField(max_length=30,validators=[EmailValidator],unique=True)
     first_name = models.CharField(max_length=30)
