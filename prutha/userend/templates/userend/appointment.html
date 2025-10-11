@@ -324,8 +324,8 @@
                 <span class="font-semibold text-gray-800 text-lg">MindEase</span>
             </a>
             <nav class="hidden md:flex items-center gap-6 text-sm text-gray-600">
-                <a href="{% url 'userend:know_more' %}" class="hover:text-gray-800">How It Works</a>
-                <a href="#" class="hover:text-gray-800">Psychologists</a>
+                <!-- <a href="{% url 'userend:know_more' %}" class="hover:text-gray-800">How It Works</a> -->
+                <!-- <a href="#" class="hover:text-gray-800">Psychologists</a> -->
                 <a href="#" class="hover:text-gray-800">Initiatives</a>
                 <a href="{% url 'userend:internship' %}" class="hover:text-gray-800">Careers</a>
             </nav>
@@ -335,7 +335,7 @@
                     <a href="{% url 'loging:logout' %}" class="px-4 py-2 text-gray-600 hover:text-gray-800 border border-gray-300 rounded-lg hover:bg-gray-50">Logout</a>
                 {% else %}
                     <a href="{% url 'loging:loginView' %}" class="px-4 py-2 text-gray-600 hover:text-gray-800">Sign in</a>
-                    <a href="{% url 'registeruser:RegisterView' %}" class="px-4 py-2 rounded-lg accent-btn text-white font-medium">Sign up</a>
+                    <a href="{% url 'loging:CreateAccount' %}" class="px-4 py-2 rounded-lg accent-btn text-white font-medium">Sign up</a>
                 {% endif %}
             </div>
         </header>

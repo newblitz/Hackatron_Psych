@@ -17,4 +17,6 @@ urlpatterns = [
     path("counsellor/", views.counsellor.as_view(), name="counsellor"),
     path("intern/", views.intern.as_view(), name="intern"),
     path("hr/", views.hr.as_view(), name="hr_dashboard"),
+    # path("how-it-works/", views.how_it_works, name="how-it-works"),
+    # path("list-psychologists/", views.list_psychologists, name="list-psychologists"),
 ]

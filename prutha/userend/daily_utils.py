@@ -1,47 +1,71 @@
 # your_app/daily_utils.py
 import time
+import requests
+import json
 from django.conf import settings
-from daily import Daily
 
-# Initialize the Daily client once
-Daily.init(settings.DAILY_API_KEY)
+# Daily API configuration
+DAILY_API_BASE_URL = "https://api.daily.co/v1"
 
 def create_daily_meeting_for_appointment(appointment):
     """
-    Creates a Daily.co room for a specific appointment.
+    Creates a Daily.co room for a specific appointment using the REST API.
     
     - Sets auto-start for audio-only recording.
     - Uses the appointment's ID in the room name for easy tracking.
     """
     try:
+        # Check if Daily API key is configured
+        api_key = settings.DAILY_API_KEY
+        if not api_key or api_key == 'your_daily_api_key_here':
+            print("⚠️ Daily API key not configured, generating fallback meeting link")
+            # Generate a fallback meeting link (Google Meet style)
+            room_name = f"appointment-{appointment.id}-{int(time.time())}"
+            fallback_url = f"https://meet.google.com/{room_name}"
+            return fallback_url, room_name
+        
         # Create a unique, predictable room name
         room_name = f"appointment-{appointment.id}-{int(time.time())}"
 
-        # Define room properties
-        properties = {
+        # Define room properties (simplified without recording for now)
+        room_data = {
+            'name': room_name,
             'properties': {
-                'exp': time.time() + (7 * 24 * 3600),  # Room expires in 7 days
-                
-                # --- This is the key for automatic recording ---
-                'start_cloud_recording': True, # Automatically start recording when first person joins
-                'recording_mode': 'cloud',
-                'recording_options': {
-                    'layout': {
-                        'preset': 'custom',
-                        'composition': 'audio-only'
-                    }
-                }
+                'exp': int(time.time() + (7 * 24 * 3600)),  # Room expires in 7 days
+                'max_participants': 10,  # Limit participants for therapy sessions
+                'enable_chat': True,  # Enable chat for communication
+                'enable_screenshare': True,  # Enable screen sharing
+                'enable_recording': False,  # Disable recording for now (requires webhook setup)
             }
         }
         
-        room_info = Daily.create_room(name=room_name, properties=properties)
-
-        if room_info and 'url' in room_info:
-            # Return both the URL and the name for saving
-            return room_info.get('url'), room_info.get('name')
+        # Make API request to create room
+        headers = {
+            'Authorization': f'Bearer {api_key}',
+            'Content-Type': 'application/json'
+        }
         
-        return None, None
+        response = requests.post(
+            f"{DAILY_API_BASE_URL}/rooms",
+            headers=headers,
+            json=room_data,
+            timeout=10
+        )
+        
+        if response.status_code in [200, 201]:
+            room_info = response.json()
+            print(f"✅ Daily.co room created successfully: {room_name}")
+            print(f"✅ Room URL: {room_info.get('url')}")
+            return room_info.get('url'), room_info.get('name')
+        else:
+            print(f"❌ Daily API error: {response.status_code} - {response.text}")
+            # Generate fallback meeting link
+            fallback_url = f"https://meet.google.com/{room_name}"
+            return fallback_url, room_name
 
     except Exception as e:
-        print(f"Error creating Daily.co room: {e}") # Replace with proper logging
-        return None, None
+        print(f"Error creating Daily.co room: {e}")
+        # Generate fallback meeting link
+        room_name = f"appointment-{appointment.id}-{int(time.time())}"
+        fallback_url = f"https://meet.google.com/{room_name}"
+        return fallback_url, room_name

@@ -118,3 +118,37 @@ class InternDetails(models.Model):
     Auth_id=models.OneToOneField(CustomUser,on_delete=models.CASCADE)
     def __str__(self):
         return f"{self.fname} {self.lname} - {self.college_name}"
+
+class MeetingSummary(models.Model):
+    """
+    Model to store AI-generated summaries of counselling sessions
+    """
+    session = models.OneToOneField(
+        Dailylog_Counserllor_patient, 
+        on_delete=models.CASCADE,
+        related_name='summary'
+    )
+    transcript = models.TextField(help_text="Full transcript of the meeting")
+    summary = models.TextField(help_text="AI-generated summary of the meeting")
+    key_points = models.JSONField(
+        default=list, 
+        help_text="List of key points extracted from the meeting"
+    )
+    sentiment_analysis = models.JSONField(
+        default=dict,
+        help_text="Sentiment analysis results"
+    )
+    recommendations = models.TextField(
+        blank=True, 
+        help_text="AI-generated recommendations based on the session"
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        verbose_name = "Meeting Summary"
+        verbose_name_plural = "Meeting Summaries"
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"Summary for {self.session.doctor_id.first_name} - {self.session.date}"

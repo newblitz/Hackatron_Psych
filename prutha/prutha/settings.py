@@ -173,5 +173,12 @@ CSRF_TRUSTED_ORIGINS = [
     "http://127.0.0.1:5173",
 ]
 
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+DAILY_API_KEY = os.environ.get('DAILY_API_KEY', 'your_daily_api_key_here')
+
+# Meeting Analysis Service Configuration
+SARVAM_API_KEY = os.environ.get('SARVAM_API', os.environ.get('SARVAM_API_KEY', 'your_sarvam_api_key_here'))
+GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY', 'your_gemini_api_key_here')

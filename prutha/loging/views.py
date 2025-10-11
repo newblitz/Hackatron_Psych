@@ -199,11 +199,11 @@ class CompleteRegistration(View):
             except IntegrityError:
                 messages.error(request, 'An account with this username already exists. Please use a different username.')
                 return render(request, "loging/complete_registration.html", {"form": form, "email": email})
-            else:
-                # Display form validation errors
-                for field, errors in form.errors.items():
-                    for error in errors:
-                        messages.error(request, f'{field}: {error}')
+        else:
+            # Display form validation errors
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f'{field}: {error}')
             return render(request, "loging/complete_registration.html", {"form": form, "email": email})
 
 class redirect_view(LoginRequiredMixin,View):
@@ -314,3 +314,11 @@ class counsellor(View):
 class intern(View):
     def get(self, request):
         return render(request, "userend/genz_dashboard.html")
+
+# class how_it_works(View):
+#     def get(self, request):
+#         return render(request, "userend/how_it_works.html")
+
+# class list_psychologists(View):
+#     def get(self, request):
+#         return render(request, "userend/list_psychologists.html")
