@@ -41,9 +41,11 @@ class Appointment(models.Model):
     session_type = models.CharField(max_length=20, choices=session_type_choices)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     gender=models.CharField(max_length=20,choices=gender,null=True)
-    IsPending = models.BooleanField(default=False)
+    IsPending = models.BooleanField(default=True)
+    meet_link = models.URLField(max_length=500, blank=True, null=True, help_text="Google Meet link for the appointment")
+    meet_link_type = models.CharField(max_length=20, choices=[('genuine', 'Genuine Google Meet')], default='genuine', help_text="Type of meet link generated - only genuine Google Meet links are allowed")
     selected_doctor = models.ForeignKey('CounsellorIntern.Psychologist', on_delete=models.CASCADE, related_name='appointments_as_doctor')
-    Assigned_doctor = models.ForeignKey('CounsellorIntern.Psychologist', on_delete=models.CASCADE, related_name='appointments_as_assigned_doctor')
+    Assigned_doctor = models.ForeignKey('CounsellorIntern.Psychologist', on_delete=models.CASCADE, related_name='appointments_as_assigned_doctor', null=True, blank=True)
     # selected_intern = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='appointments_as_intern', null=True, blank=True, limit_choices_to={'user_type': 'intern'})
     def __str__(self):
         return f"{self.first_name} {self.last_name}"

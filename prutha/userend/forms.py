@@ -10,7 +10,7 @@ class AppointmentForm(forms.ModelForm):
         model = Appointment
         exclude=['user','IsPending','Assigned_doctor','date']  # Exclude date field as it will be auto-populated
         widgets = {
-            'appointment_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control', 'placeholder': 'Select your preferred date'}),
+            'appointment_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control', 'placeholder': 'Select your preferred date', 'value': '', 'autocomplete': 'off'}),
             'time_slot': forms.RadioSelect(attrs={'class': 'time-slot-radio'}),
             'selected_doctor': forms.Select(attrs={'class': 'form-control', 'placeholder': 'Choose your preferred doctor'}),
             'first_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your first name'}),
@@ -35,27 +35,20 @@ class AppointmentForm(forms.ModelForm):
             self.fields['selected_doctor'].queryset = Psychologist.objects.none()
             self.fields['selected_doctor'].empty_label = "No doctors available"
         
-        # Set date constraints for 7-day limit
+        # Set date constraints for 3-day limit
         today = date.today()
         max_date = today + timedelta(days=3)
         
-        # Set min and max attributes for the date input
+        # Set min and max attributes for the date input and ensure no default value
         self.fields['appointment_date'].widget.attrs.update({
             'min': today.strftime('%Y-%m-%d'),
-            'max': max_date.strftime('%Y-%m-%d')
+            'max': max_date.strftime('%Y-%m-%d'),
+            'value': '',  # Explicitly set empty value
+            'autocomplete': 'off'  # Prevent browser autofill
         })
     
     def clean_appointment_date(self):
+        # Let the view handle date validation to provide better error messages
         appointment_date = self.cleaned_data.get('appointment_date')
-        if appointment_date:
-            today = date.today()
-            max_date = today + timedelta(days=7)
-            
-            if appointment_date < today:
-                raise ValidationError("Appointment date cannot be in the past.")
-            
-            if appointment_date > max_date:
-                raise ValidationError("Appointment date cannot be more than 7 days from today.")
-        
         return appointment_date
     

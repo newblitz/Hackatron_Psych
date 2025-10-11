@@ -62,10 +62,10 @@
                 <span class="font-semibold text-gray-800 text-lg">MindEase</span>
             </a>
             <nav class="hidden md:flex items-center gap-6 text-sm text-gray-600">
+                <a href="{% url 'userend:know_more' %}" class="hover:text-gray-800">How It Works</a>
                 <a href="#" class="hover:text-gray-800">Psychologists</a>
                 <a href="#" class="hover:text-gray-800">Initiatives</a>
-                <a href="#" class="hover:text-gray-800">Internships</a>
-             
+                <a href="{% url 'userend:internship' %}" class="hover:text-gray-800">Careers</a>
             </nav>
             <div class="flex items-center gap-3">
                 {% if user.is_authenticated %}
@@ -236,6 +236,11 @@
                     <div class="mb-4 md:mb-0">
                         <h2 class="text-2xl font-bold bg-gradient-to-r from-cyan-500 to-purple-600 bg-clip-text text-transparent">MindEase</h2>
                         <p class="text-gray-600 mt-2">Your journey to better mental health starts here.</p>
+                        <div class="flex gap-4 mt-3 justify-center md:justify-start">
+                            <a href="{% url 'userend:internship' %}" class="text-purple-600 hover:underline">Careers</a>
+                            <a href="{% url 'userend:know_more' %}" class="text-gray-600 hover:text-gray-800">How It Works</a>
+                            <a href="#" class="text-gray-600 hover:text-gray-800">Contact</a>
+                        </div>
                             </div>
                             <div class="flex space-x-4">
                         <a href="#" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-all">
