@@ -115,11 +115,11 @@
                         <span class="material-symbols-outlined text-lg">dashboard</span>
                         Dashboard
                     </a>
-                    <!-- <a href="#" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 font-medium">
+                    <a href="{% url 'HRDashbaord:PastJobs' %}" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 font-medium">
                         <span class="material-symbols-outlined text-lg">work</span>
                         Past Jobs
-                    </a> -->
-                    <a href="{% url 'HRDashbaord:job_responses' %}" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 font-medium">
+                    </a>
+                    <a href="{% url 'HRDashbaord:JobResponses' %}" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 font-medium">
                         <span class="material-symbols-outlined text-lg">mail</span>
                         Responses
                     </a>
@@ -131,10 +131,10 @@
                         <span class="material-symbols-outlined text-lg">visibility</span>
                         View Public Jobs
                     </a>
-                    <a href="#" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 font-medium">
+                    <!-- <a href="#" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 font-medium">
                         <span class="material-symbols-outlined text-lg">groups</span>
                         Candidates
-                    </a>
+                    </a> -->
                     <!-- <a href="#" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 font-medium">
                         <span class="material-symbols-outlined text-lg">analytics</span>
                         Analytics
@@ -409,6 +409,14 @@
                 </div>
             </main>
         </div>
+    </div>
+
+    <!-- Floating Logout Button -->
+    <div class="fixed bottom-6 right-6 z-50">
+        <a href="{% url 'loging:logout' %}" class="flex items-center gap-2 px-4 py-3 bg-red-600 text-white rounded-full shadow-lg hover:bg-red-700 transition-all duration-300 hover:shadow-xl hover:scale-105">
+            <span class="material-symbols-outlined text-sm">logout</span>
+            <span class="text-sm font-medium">Logout</span>
+        </a>
     </div>
 
     <script>
