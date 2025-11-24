@@ -1,173 +1,198 @@
 import { motion } from 'framer-motion';
-import { Check } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import '../styles/Benefits.css';
 
 function Benefits() {
-  const benefits = [
-    'Licensed psychologists',
-    'Confidential & secure sessions',
-    'Flexible scheduling options',
-    'Safe & supportive environment',
-    'Evidence-based approaches',
-    'Ongoing support & guidance',
+  const stats = [
+    { value: '10,000+', label: 'Happy Clients' },
+    { value: '98%', label: 'Success Rate' },
+    { value: '24/7', label: 'Support Available' },
   ];
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.3,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, x: -30 },
-    visible: {
-      opacity: 1,
-      x: 0,
-      transition: {
-        duration: 0.5,
-      },
-    },
-  };
 
   return (
     <section className="benefits">
       <div className="benefits-container">
-        <motion.div
-          className="benefits-content"
-          initial={{ opacity: 0, x: -50 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-        >
-          <motion.h2
-            className="benefits-title"
-            initial={{ opacity: 0, y: 20 }}
+        <div className="benefits-content">
+          <motion.div
+            className="content-wrapper"
+            initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            Why Choose <span className="gradient-text">MindEase</span>?
-          </motion.h2>
-
-          <motion.p
-            className="benefits-description"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            Your journey to better mental health starts here with our comprehensive
-            and compassionate care approach.
-          </motion.p>
-
-          <motion.div
-            className="benefits-list"
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-          >
-            {benefits.map((benefit, index) => (
-              <motion.div
-                key={index}
-                className="benefit-item"
-                variants={itemVariants}
-                whileHover={{ x: 10 }}
-              >
-                <motion.div
-                  className="benefit-icon"
-                  whileHover={{ scale: 1.2, rotate: 360 }}
-                  transition={{ duration: 0.5 }}
-                >
-                  <Check size={20} strokeWidth={3} />
-                </motion.div>
-                <span className="benefit-text">{benefit}</span>
-              </motion.div>
-            ))}
-          </motion.div>
-
-          <motion.div
-            className="benefits-cta"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.8 }}
-          >
-            <motion.a
-              href="/appointment"
-              className="btn btn-large btn-primary"
-              whileHover={{
-                scale: 1.05,
-                boxShadow: '0 20px 40px rgba(6, 182, 212, 0.4)',
-              }}
-              whileTap={{ scale: 0.95 }}
+            <motion.div
+              className="header-badge"
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4 }}
             >
-              Get Started Today
-            </motion.a>
+              Why Choose Us
+            </motion.div>
+
+            <h2 className="section-title">
+              Your wellness journey
+              <br />
+              <span className="gradient-text">starts here</span>
+            </h2>
+
+            <p className="section-description">
+              Join thousands of people who have transformed their lives through
+              professional mental health support. Experience the difference that
+              personalized care can make.
+            </p>
+
+            <div className="stats-grid">
+              {stats.map((stat, index) => (
+                <motion.div
+                  key={index}
+                  className="stat-item"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                >
+                  <div className="stat-value">{stat.value}</div>
+                  <div className="stat-label">{stat.label}</div>
+                </motion.div>
+              ))}
+            </div>
+
+            <motion.div
+              className="cta-group"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+            >
+              <motion.a
+                href="/appointment"
+                className="btn btn-primary"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                Book Your First Session
+                <ArrowRight size={18} strokeWidth={2} />
+              </motion.a>
+              <motion.a
+                href="/know_more"
+                className="btn btn-ghost"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                Learn More
+              </motion.a>
+            </motion.div>
           </motion.div>
-        </motion.div>
+        </div>
 
         <motion.div
           className="benefits-visual"
-          initial={{ opacity: 0, scale: 0.8 }}
+          initial={{ opacity: 0, scale: 0.9 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
-          <motion.div
-            className="visual-circle circle-1"
-            animate={{
-              scale: [1, 1.1, 1],
-              rotate: [0, 180, 360],
-            }}
-            transition={{
-              duration: 20,
-              repeat: Infinity,
-              ease: 'linear',
-            }}
-          />
-          <motion.div
-            className="visual-circle circle-2"
-            animate={{
-              scale: [1, 1.2, 1],
-              rotate: [360, 180, 0],
-            }}
-            transition={{
-              duration: 15,
-              repeat: Infinity,
-              ease: 'linear',
-            }}
-          />
-          <motion.div
-            className="visual-circle circle-3"
-            animate={{
-              scale: [1, 1.15, 1],
-              rotate: [0, -180, -360],
-            }}
-            transition={{
-              duration: 25,
-              repeat: Infinity,
-              ease: 'linear',
-            }}
-          />
-          <div className="visual-center">
+          <div className="visual-wrapper">
             <motion.div
-              className="center-icon"
+              className="visual-ring ring-1"
               animate={{
-                y: [0, -10, 0],
+                rotate: 360,
               }}
               transition={{
-                duration: 3,
+                duration: 20,
+                repeat: Infinity,
+                ease: 'linear',
+              }}
+            />
+            <motion.div
+              className="visual-ring ring-2"
+              animate={{
+                rotate: -360,
+              }}
+              transition={{
+                duration: 25,
+                repeat: Infinity,
+                ease: 'linear',
+              }}
+            />
+            <motion.div
+              className="visual-ring ring-3"
+              animate={{
+                rotate: 360,
+              }}
+              transition={{
+                duration: 30,
+                repeat: Infinity,
+                ease: 'linear',
+              }}
+            />
+
+            <div className="visual-center">
+              <motion.div
+                className="center-content"
+                animate={{
+                  scale: [1, 1.05, 1],
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                }}
+              >
+                <div className="center-icon">✨</div>
+                <div className="center-text">Your Journey</div>
+              </motion.div>
+            </div>
+
+            <motion.div
+              className="floating-badge badge-1"
+              animate={{
+                y: [0, -15, 0],
+                rotate: [0, 5, 0],
+              }}
+              transition={{
+                duration: 4,
                 repeat: Infinity,
                 ease: 'easeInOut',
               }}
             >
-              💚
+              <span className="badge-emoji">💙</span>
+              <span className="badge-text">Mindfulness</span>
+            </motion.div>
+
+            <motion.div
+              className="floating-badge badge-2"
+              animate={{
+                y: [0, -20, 0],
+                rotate: [0, -5, 0],
+              }}
+              transition={{
+                duration: 5,
+                repeat: Infinity,
+                ease: 'easeInOut',
+                delay: 1,
+              }}
+            >
+              <span className="badge-emoji">🌟</span>
+              <span className="badge-text">Growth</span>
+            </motion.div>
+
+            <motion.div
+              className="floating-badge badge-3"
+              animate={{
+                y: [0, -10, 0],
+                rotate: [0, 3, 0],
+              }}
+              transition={{
+                duration: 3.5,
+                repeat: Infinity,
+                ease: 'easeInOut',
+                delay: 0.5,
+              }}
+            >
+              <span className="badge-emoji">🎯</span>
+              <span className="badge-text">Goals</span>
             </motion.div>
           </div>
         </motion.div>

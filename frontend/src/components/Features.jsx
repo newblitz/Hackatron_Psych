@@ -1,119 +1,161 @@
-import { motion } from 'framer-motion';
-import { Brain, Clock, Shield, Users, Video, Award } from 'lucide-react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { useRef } from 'react';
+import { Zap, Lock, Calendar, Video, MessageCircle, TrendingUp } from 'lucide-react';
 import '../styles/Features.css';
 
 function Features() {
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ['start end', 'end start'],
+  });
+
+  const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
+
   const features = [
     {
-      icon: Brain,
-      title: 'Expert Therapists',
-      description: 'Our licensed professionals bring years of experience to help you overcome challenges.',
-      color: '#06b6d4',
+      icon: Zap,
+      title: 'Instant Matching',
+      description: 'Get matched with the right therapist in under 2 minutes using our intelligent matching system.',
     },
     {
-      icon: Clock,
+      icon: Lock,
+      title: 'Private & Secure',
+      description: 'End-to-end encryption ensures your conversations remain completely confidential.',
+    },
+    {
+      icon: Calendar,
       title: 'Flexible Scheduling',
-      description: 'Choose from in-person or virtual sessions at times that work best for you.',
-      color: '#7c3aed',
-    },
-    {
-      icon: Shield,
-      title: 'Confidential & Safe',
-      description: 'Your privacy is our priority with secure and confidential counseling sessions.',
-      color: '#06b6d4',
+      description: 'Book sessions that fit your schedule, with options for same-day appointments.',
     },
     {
       icon: Video,
       title: 'Virtual Sessions',
-      description: 'Connect with therapists from anywhere through secure video calls.',
-      color: '#7c3aed',
+      description: 'High-quality video sessions from the comfort of your home or anywhere you feel safe.',
     },
     {
-      icon: Users,
-      title: 'Personalized Care',
-      description: 'Tailored treatment plans designed specifically for your unique needs.',
-      color: '#06b6d4',
+      icon: MessageCircle,
+      title: 'Chat Anytime',
+      description: 'Message your therapist between sessions and get support when you need it most.',
     },
     {
-      icon: Award,
-      title: 'Proven Results',
-      description: 'Evidence-based approaches that have helped thousands achieve their goals.',
-      color: '#7c3aed',
+      icon: TrendingUp,
+      title: 'Track Progress',
+      description: 'Visualize your mental health journey with insightful analytics and milestone tracking.',
     },
   ];
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.6,
-        ease: 'easeOut',
-      },
-    },
-  };
-
   return (
-    <section className="features">
+    <section ref={ref} className="features" id="features">
       <div className="features-container">
         <motion.div
           className="features-header"
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: 0.6 }}
         >
-          <h2 className="features-title">Everything You Need for Mental Wellness</h2>
-          <p className="features-subtitle">
-            Comprehensive support designed to help you thrive
+          <motion.div
+            className="header-badge"
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.4 }}
+          >
+            Features
+          </motion.div>
+          <h2 className="section-title">
+            Everything you need to
+            <br />
+            <span className="gradient-text">transform your mindset</span>
+          </h2>
+          <p className="section-subtitle">
+            Professional tools and support designed for your wellness journey
           </p>
         </motion.div>
 
-        <motion.div
-          className="features-grid"
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-100px' }}
-        >
+        <motion.div className="features-grid">
           {features.map((feature, index) => (
             <motion.div
               key={index}
               className="feature-card"
-              variants={itemVariants}
-              whileHover={{
-                y: -10,
-                boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1)',
-              }}
-              transition={{ duration: 0.3 }}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-50px' }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              whileHover={{ y: -8 }}
             >
-              <motion.div
-                className="feature-icon-wrapper"
-                style={{ backgroundColor: `${feature.color}15` }}
-                whileHover={{ scale: 1.1, rotate: 5 }}
-                transition={{ duration: 0.3 }}
-              >
-                <feature.icon
-                  size={32}
-                  color={feature.color}
-                  strokeWidth={2}
-                />
-              </motion.div>
+              <div className="feature-icon-container">
+                <feature.icon size={24} strokeWidth={2} />
+              </div>
               <h3 className="feature-title">{feature.title}</h3>
               <p className="feature-description">{feature.description}</p>
             </motion.div>
           ))}
+        </motion.div>
+
+        <motion.div
+          className="features-spotlight"
+          style={{ y }}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+        >
+          <div className="spotlight-content">
+            <div className="spotlight-visual">
+              <motion.div
+                className="spotlight-glow"
+                animate={{
+                  scale: [1, 1.2, 1],
+                  opacity: [0.5, 0.8, 0.5],
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                }}
+              />
+              <div className="spotlight-card">
+                <div className="card-header">
+                  <div className="avatar">👤</div>
+                  <div className="card-info">
+                    <div className="therapist-name">Dr. Sarah Johnson</div>
+                    <div className="therapist-title">Clinical Psychologist</div>
+                  </div>
+                  <div className="status-badge">Available</div>
+                </div>
+                <div className="card-stats">
+                  <div className="stat">
+                    <div className="stat-value">4.9</div>
+                    <div className="stat-label">Rating</div>
+                  </div>
+                  <div className="stat">
+                    <div className="stat-value">1,200+</div>
+                    <div className="stat-label">Sessions</div>
+                  </div>
+                  <div className="stat">
+                    <div className="stat-value">8 yrs</div>
+                    <div className="stat-label">Experience</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="spotlight-text">
+              <h3>Meet your perfect match</h3>
+              <p>
+                Our intelligent matching algorithm connects you with therapists who
+                specialize in your specific needs and concerns.
+              </p>
+              <motion.a
+                href="#therapists"
+                className="btn-link"
+                whileHover={{ x: 5 }}
+              >
+                Browse therapists →
+              </motion.a>
+            </div>
+          </div>
         </motion.div>
       </div>
     </section>
