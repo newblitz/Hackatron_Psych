@@ -17,7 +17,24 @@ from django.conf import settings
 from django.utils import timezone
 from datetime import timedelta
 
+
 # Create your views here.
+
+# views.py
+from django.contrib.auth import views as auth_views
+from django.shortcuts import redirect
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import never_cache
+
+@method_decorator(never_cache, name='dispatch')
+class CustomLoginView(auth_views.LoginView):
+    template_name = 'registration/login.html'  # your login template
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect('home')  # redirect to home/dashboard if already logged in
+        return super().dispatch(request, *args, **kwargs)
+
 class CreateAccount(View):
     """First step: Email verification"""
     

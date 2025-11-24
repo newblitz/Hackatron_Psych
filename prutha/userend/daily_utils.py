@@ -25,17 +25,18 @@ def create_daily_meeting_for_appointment(appointment):
             return fallback_url, room_name
         
         # Create a unique, predictable room name
-        room_name = f"appointment-{appointment.id}-{int(time.time())}"
+        room_name = f"appointment-{appointment.id}-{appointment.selected_doctor.Auth_id}-{int(time.time())}"
 
         # Define room properties (simplified without recording for now)
         room_data = {
             'name': room_name,
             'properties': {
-                'exp': int(time.time() + (7 * 24 * 3600)),  # Room expires in 7 days
+                'exp': int(time.time() + (3 * 24 * 3600)),  # Room expires in 3 days
                 'max_participants': 10,  # Limit participants for therapy sessions
                 'enable_chat': True,  # Enable chat for communication
                 'enable_screenshare': True,  # Enable screen sharing
-                'enable_recording': False,  # Disable recording for now (requires webhook setup)
+                # https://docs.daily.co/reference/rest-api/rooms/config#nbf
+                'enable_recording': "cloud",  # Disable recording for now (requires webhook setup)
             }
         }
         
@@ -69,3 +70,24 @@ def create_daily_meeting_for_appointment(appointment):
         room_name = f"appointment-{appointment.id}-{int(time.time())}"
         fallback_url = f"https://meet.google.com/{room_name}"
         return fallback_url, room_name
+
+def get_daily_room_recording(room_name):
+    """
+    Gets the recording of a Daily.co room.
+    """
+    try:
+        api_key = settings.DAILY_API_KEY
+        if not api_key or api_key == 'your_daily_api_key_here':
+            return None
+        
+        headers = {
+            'Authorization': f'Bearer {api_key}',
+            'Content-Type': 'application/json'
+        }
+        
+        response = requests.get(
+            f"{DAILY_API_BASE_URL}/rooms/{room_name}/recordings",
+            headers=headers,
+            timeout=10
+        )
+            

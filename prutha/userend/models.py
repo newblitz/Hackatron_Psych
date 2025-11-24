@@ -2,6 +2,7 @@ from django.db import models
 from django.core.validators import RegexValidator,EmailValidator
 from loging.models import CustomUser
 from django.utils import timezone
+# from CounsellorIntern.models import DailyLog_Counsellor
 # from CounsellorIntern.models import Psychologist  # Removed to avoid circular import
 # from django.contrib.auth.models import User
 class Appointment(models.Model):

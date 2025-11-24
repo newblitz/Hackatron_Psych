@@ -324,11 +324,14 @@ class appointment(LoginRequiredMixin, View):
     @staticmethod
     def Check_previous_appointment(user, fname, lname):
         """Check if user has an appointment in the past 3 days"""
-        previous_appointment = Appointment.objects.filter(user=user, first_name=fname, last_name=lname).first()
+        previous_appointment = Appointment.objects.filter(user=user, first_name=fname, last_name=lname).order_by('-appointment_date').first()
         now = datetime.now()
         current_date = now.date()
-        if previous_appointment and (previous_appointment.appointment_date - current_date).days <= 3:
-            return True
+        if previous_appointment:
+            if -3<(previous_appointment.appointment_date - current_date).days < 3:
+                return True
+            else:
+                return False
         else:
             return False
     

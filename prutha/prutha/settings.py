@@ -137,7 +137,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 LOGIN_REDIRECT_URL = "loging:redirect"
 
 # Session Configuration for Automatic Logout on Browser Close
-SESSION_COOKIE_AGE = 20000  # 24 hours in seconds
+SESSION_COOKIE_AGE = 300  # 5 minutes in seconds
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # Logout when browser is closed
 # SESSION_COOKIE_SECURE = False  # Set to True in production with HTTPS
 # SESSION_COOKIE_HTTPONLY = True  # Prevent JavaScript access to session cookie

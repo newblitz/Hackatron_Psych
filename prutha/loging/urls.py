@@ -10,7 +10,7 @@ urlpatterns = [
     path("", views.CreateAccount.as_view(), name="CreateAccount"),
     path("verify-otp/", views.VerifyOTP.as_view(), name="verify_otp"),
     path("complete-registration/", views.CompleteRegistration.as_view(), name="complete_registration"),
-    path("login/", auth_views.LoginView.as_view(), name="loginView"),
+    path("login/", views.CustomLoginView.as_view(), name="loginView"),
     path("logout/", views.logout_view, name="logout"),
     # path('logout/', auth_views.LogoutView.as_view(next_page='loging/logout.html'), name='logout'),
     path("redirect/", views.redirect_view.as_view(), name="redirect"),

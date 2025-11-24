@@ -4,10 +4,21 @@ from CounsellorIntern.models import Psychologist
 from django.core.validators import RegexValidator,EmailValidator,MaxValueValidator
 from datetime import date, timedelta
 from django.core.exceptions import ValidationError
-
+from CounsellorIntern.models import DailyLog_Counsellor
+from datetime import datetime
 class AppointmentForm(forms.ModelForm):
+    today_time=datetime.now().time().hour
+    time_slot_av = [("09:00","09:00"),("10:00","10:00"),("11:00","11:00"),("14:00","14:00"),("15:00","15:00"),("16:00","16:00")]
+    
+   
+    time_slot=forms.ChoiceField(choices=list_of_available_slots)
     class Meta:
         model = Appointment
+        today_time=datetime.now().time()
+        time_slot_choices = [9,10,11,14,15,16]
+        # available_doctors = DailyLog_Counsellor.objects.filter(present=True,time_slot__gt=today_time).values_list('doctor', flat=True)
+        # list_of_available_slots=filter(lambda x:True if x>int(datetime.now().time().hour) else False,time_slot_choices)
+        # available_doctors = DailyLog_Counsellor.objects.filter(present=True).values_list('doctor', flat=True)
         exclude=['user','IsPending','Assigned_doctor','date']  # Exclude date field as it will be auto-populated
         widgets = {
             'appointment_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control', 'placeholder': 'Select your preferred date', 'value': '', 'autocomplete': 'off'}),
