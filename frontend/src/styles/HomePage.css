@@ -1,0 +1,13 @@
+.homepage {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #f8fdff 0%, #fffaf0 100%);
+  overflow-x: hidden;
+}
+
+.gradient-text {
+  background: linear-gradient(90deg, #06b6d4 0%, #7c3aed 100%);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
