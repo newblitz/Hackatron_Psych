@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Heart, Menu, X } from 'lucide-react';
 import '../styles/Navigation.css';
 
 function Navigation() {
@@ -17,45 +17,42 @@ function Navigation() {
   }, []);
 
   const navLinks = [
-    { name: 'Features', href: '#features' },
-    { name: 'Therapists', href: '#therapists' },
-    { name: 'Pricing', href: '#pricing' },
+    { name: 'How It Works', href: '/know_more' },
+    { name: 'Our Therapists', href: '#therapists' },
+    { name: 'Resources', href: '#resources' },
     { name: 'Careers', href: '/internship' },
   ];
 
   return (
     <motion.header
       className={`navigation ${scrolled ? 'scrolled' : ''}`}
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+      initial={{ y: -100, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
     >
       <div className="nav-container">
         <motion.a
           href="/"
           className="logo"
-          whileHover={{ opacity: 0.8 }}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
         >
-          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-            <rect width="28" height="28" rx="6" fill="currentColor" />
-            <path
-              d="M14 8L18 12L14 16M10 12H18"
-              stroke="white"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+          <div className="logo-icon">
+            <Heart size={24} fill="currentColor" />
+          </div>
           <span className="logo-text">MindEase</span>
         </motion.a>
 
         <nav className="nav-links">
-          {navLinks.map((link) => (
+          {navLinks.map((link, index) => (
             <motion.a
               key={link.name}
               href={link.href}
               className="nav-link"
-              whileHover={{ y: -1 }}
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 + 0.2, duration: 0.5 }}
+              whileHover={{ y: -2 }}
             >
               {link.name}
             </motion.a>
@@ -65,12 +62,12 @@ function Navigation() {
         <div className="nav-actions">
           {isAuthenticated ? (
             <>
-              <span className="user-indicator">👤</span>
+              <span className="user-badge">👤</span>
               <motion.a
                 href="/logout"
-                className="btn-nav"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+                className="btn btn-outline"
+                whileHover={{ scale: 1.05, y: -1 }}
+                whileTap={{ scale: 0.95 }}
               >
                 Logout
               </motion.a>
@@ -79,17 +76,17 @@ function Navigation() {
             <>
               <motion.a
                 href="/create/login/"
-                className="btn-nav btn-ghost"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+                className="nav-link-cta"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
-                Sign in
+                Sign In
               </motion.a>
               <motion.a
                 href="/create/"
-                className="btn-nav btn-primary"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+                className="btn btn-primary"
+                whileHover={{ scale: 1.05, y: -1 }}
+                whileTap={{ scale: 0.95 }}
               >
                 Get Started
               </motion.a>
@@ -100,7 +97,7 @@ function Navigation() {
         <motion.button
           className="mobile-menu-btn"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          whileTap={{ scale: 0.95 }}
+          whileTap={{ scale: 0.9 }}
         >
           {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </motion.button>
@@ -112,19 +109,22 @@ function Navigation() {
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: 'auto' }}
           exit={{ opacity: 0, height: 0 }}
+          transition={{ duration: 0.3 }}
         >
-          {navLinks.map((link) => (
-            <a key={link.name} href={link.href} className="mobile-link">
-              {link.name}
-            </a>
-          ))}
-          <div className="mobile-actions">
-            <a href="/create/login/" className="mobile-action">
-              Sign in
-            </a>
-            <a href="/create/" className="mobile-action primary">
-              Get Started
-            </a>
+          <div className="mobile-menu-content">
+            {navLinks.map((link) => (
+              <a key={link.name} href={link.href} className="mobile-link">
+                {link.name}
+              </a>
+            ))}
+            <div className="mobile-actions">
+              <a href="/create/login/" className="mobile-action secondary">
+                Sign In
+              </a>
+              <a href="/create/" className="mobile-action primary">
+                Get Started
+              </a>
+            </div>
           </div>
         </motion.div>
       )}
