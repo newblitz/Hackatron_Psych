@@ -1,11 +1,11 @@
 .footer {
   padding: 3rem 0;
-  background: var(--color-primary);
-  color: white;
+  background: var(--color-card);
+  color: var(--color-text-secondary);
   text-align: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .footer-copyright {
   font-size: 0.9375rem;
-  opacity: 0.9;
 }

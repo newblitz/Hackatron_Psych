@@ -5,20 +5,22 @@
 }
 
 :root {
-  --color-primary: #3b5e9b;
-  --color-secondary: #9dbdf5;
-  --color-accent: #f5a477;
-  --color-text: #1a1a1a;
-  --color-text-light: #666666;
-  --color-background: #ffffff;
+  --color-primary: #5b8bc9;
+  --color-secondary: #7ea5d9;
+  --color-accent: #8b6fd9;
+  --color-text: #ffffff;
+  --color-text-secondary: #b0b8c8;
+  --color-background: #0a0e1a;
+  --color-surface: #141824;
+  --color-card: #1a1f2e;
 
-  --gradient-hero: linear-gradient(180deg, #3b5e9b 0%, #9dbdf5 49%, #f5a477 75%, #ffffff 100%);
-  --gradient-card: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+  --gradient-hero: linear-gradient(180deg, #0a0e1a 0%, #1a2332 30%, #2a3547 60%, #3a4757 100%);
+  --gradient-card: linear-gradient(135deg, rgba(91, 139, 201, 0.1), rgba(139, 111, 217, 0.1));
 
   --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
 
-  --shadow-soft: 0 4px 24px rgba(0, 0, 0, 0.08);
-  --shadow-medium: 0 8px 32px rgba(0, 0, 0, 0.12);
+  --shadow-soft: 0 4px 24px rgba(0, 0, 0, 0.4);
+  --shadow-medium: 0 8px 32px rgba(0, 0, 0, 0.5);
 
   --blur-glass: blur(20px);
 
@@ -80,41 +82,43 @@ button {
 }
 
 .btn-primary {
-  background: var(--color-primary);
+  background: linear-gradient(135deg, #5b8bc9, #7ea5d9);
   color: white;
+  box-shadow: 0 4px 20px rgba(91, 139, 201, 0.3);
 }
 
 .btn-primary:hover {
-  background: #2d4a7c;
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(59, 94, 155, 0.3);
+  box-shadow: 0 8px 30px rgba(91, 139, 201, 0.4);
 }
 
 .btn-secondary {
-  background: white;
-  color: var(--color-primary);
-  border: 2px solid var(--color-primary);
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: 2px solid rgba(91, 139, 201, 0.3);
 }
 
 .btn-secondary:hover {
-  background: var(--color-primary);
-  color: white;
+  background: rgba(91, 139, 201, 0.1);
+  border-color: var(--color-primary);
 }
 
 .btn-light {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
   color: white;
   backdrop-filter: var(--blur-glass);
   -webkit-backdrop-filter: var(--blur-glass);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .btn-light:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
 }
 
 .section {
   padding: 5rem 0;
+  position: relative;
 }
 
 .section-title {
@@ -129,7 +133,7 @@ button {
 .section-subtitle {
   font-size: 1.25rem;
   line-height: 1.6;
-  color: var(--color-text-light);
+  color: var(--color-text-secondary);
   text-align: center;
   max-width: 700px;
   margin: 0 auto 3rem;

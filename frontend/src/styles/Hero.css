@@ -38,7 +38,7 @@
 .hero-description {
   font-size: 1.25rem;
   line-height: 1.7;
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(255, 255, 255, 0.85);
   margin-bottom: 2.5rem;
   max-width: 540px;
 }
@@ -61,7 +61,7 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  color: white;
+  color: rgba(255, 255, 255, 0.9);
   font-size: 1rem;
   font-weight: 500;
 }
@@ -77,12 +77,12 @@
 }
 
 .visual-card {
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(26, 31, 46, 0.8);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-radius: 24px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .card-main {
@@ -101,7 +101,7 @@
   align-items: center;
   margin-bottom: 1.5rem;
   padding-bottom: 1.5rem;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .avatar-group {
@@ -114,13 +114,13 @@
   width: 2.5rem;
   height: 2.5rem;
   border-radius: 50%;
-  background: white;
+  background: var(--color-surface);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.25rem;
-  border: 2px solid white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 2px solid var(--color-card);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   margin-left: -0.5rem;
 }
 
@@ -130,11 +130,12 @@
 
 .status-badge {
   padding: 0.375rem 0.875rem;
-  background: #dcfce7;
-  color: #166534;
+  background: rgba(34, 197, 94, 0.2);
+  color: #4ade80;
   font-size: 0.875rem;
   font-weight: 600;
   border-radius: 20px;
+  border: 1px solid rgba(34, 197, 94, 0.3);
 }
 
 .card-body h3 {
@@ -147,7 +148,7 @@
 .card-body p {
   font-size: 1rem;
   line-height: 1.6;
-  color: var(--color-text-light);
+  color: var(--color-text-secondary);
   margin-bottom: 1.5rem;
 }
 
@@ -164,61 +165,25 @@
 
 .rating-text {
   font-size: 0.875rem;
-  color: var(--color-text-light);
+  color: var(--color-text-secondary);
   font-weight: 500;
 }
 
-.card-floating {
+.floating-image {
   position: absolute;
-  padding: 1.25rem 1.5rem;
+  bottom: -5%;
+  right: -10%;
+  width: 300px;
+  height: 300px;
   z-index: 1;
+  pointer-events: none;
 }
 
-.card-1 {
-  top: 10%;
-  left: 0;
-}
-
-.card-2 {
-  top: 15%;
-  right: 0;
-}
-
-.card-3 {
-  bottom: 15%;
-  left: 10%;
-}
-
-.mini-stat {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  text-align: center;
-}
-
-.stat-number {
-  font-size: 2rem;
-  font-weight: 700;
-  color: var(--color-primary);
-  line-height: 1;
-}
-
-.stat-label {
-  font-size: 0.875rem;
-  color: var(--color-text-light);
-  font-weight: 600;
-}
-
-.stat-icon {
-  font-size: 2rem;
-  margin-bottom: 0.25rem;
-}
-
-.stat-text {
-  font-size: 0.9375rem;
-  font-weight: 600;
-  color: var(--color-text);
+.floating-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
 }
 
 @media (max-width: 1024px) {
@@ -251,6 +216,12 @@
     max-width: 600px;
     margin: 0 auto;
   }
+
+  .floating-image {
+    width: 250px;
+    height: 250px;
+    right: -5%;
+  }
 }
 
 @media (max-width: 768px) {
@@ -275,22 +246,10 @@
     padding: 1.5rem;
   }
 
-  .card-floating {
-    padding: 1rem 1.25rem;
-  }
-
-  .card-1 {
-    top: 5%;
-    left: 0;
-  }
-
-  .card-2 {
-    top: 10%;
-    right: 0;
-  }
-
-  .card-3 {
-    bottom: 10%;
-    left: 5%;
+  .floating-image {
+    width: 200px;
+    height: 200px;
+    bottom: 0;
+    right: -5%;
   }
 }

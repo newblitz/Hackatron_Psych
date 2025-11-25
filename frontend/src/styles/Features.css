@@ -1,5 +1,20 @@
 .features {
-  background: white;
+  background: var(--color-background);
+  position: relative;
+  overflow: hidden;
+}
+
+.features-background {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(91, 139, 201, 0.05), transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.features .container {
+  position: relative;
+  z-index: 1;
 }
 
 .features-grid {
@@ -10,16 +25,34 @@
 
 .feature-card {
   padding: 2.5rem;
-  background: white;
+  background: var(--color-card);
   border-radius: 20px;
-  border: 1px solid #f0f0f0;
-  transition: var(--transition);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.feature-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #5b8bc9, #7ea5d9);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.feature-card:hover::before {
+  transform: scaleX(1);
 }
 
 .feature-card:hover {
-  transform: translateY(-8px);
-  box-shadow: var(--shadow-medium);
-  border-color: var(--color-secondary);
+  border-color: rgba(91, 139, 201, 0.3);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
 }
 
 .feature-icon {
@@ -28,10 +61,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #3b5e9b, #9dbdf5);
-  color: white;
+  background: linear-gradient(135deg, rgba(91, 139, 201, 0.2), rgba(126, 165, 217, 0.2));
+  color: var(--color-primary);
   border-radius: 16px;
   margin-bottom: 1.5rem;
+  border: 1px solid rgba(91, 139, 201, 0.2);
 }
 
 .feature-card h3 {
@@ -44,7 +78,7 @@
 .feature-card p {
   font-size: 1rem;
   line-height: 1.6;
-  color: var(--color-text-light);
+  color: var(--color-text-secondary);
 }
 
 @media (max-width: 768px) {

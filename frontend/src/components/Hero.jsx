@@ -1,34 +1,59 @@
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight, CheckCircle } from 'lucide-react';
+import { useRef } from 'react';
+import spotifySticker from '../assets/spotify_sticker.png';
 import '../styles/Hero.css';
 
 function Hero() {
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ['start start', 'end start'],
+  });
+
+  const y = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
+  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
+
   return (
-    <section className="hero">
-      <div className="hero-gradient" />
+    <section ref={ref} className="hero">
+      <motion.div className="hero-gradient" style={{ scale }} />
 
       <div className="container">
         <div className="hero-content">
           <motion.div
             className="hero-text"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            style={{ y, opacity }}
           >
-            <h1 className="hero-title">
+            <motion.h1
+              className="hero-title"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+            >
               Your Mental Wellness,
               <br />
               Our Priority
-            </h1>
-            <p className="hero-description">
+            </motion.h1>
+            <motion.p
+              className="hero-description"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
               Connect with licensed therapists and counselors who understand your journey.
               Start your path to better mental health today.
-            </p>
-            <div className="hero-buttons">
+            </motion.p>
+            <motion.div
+              className="hero-buttons"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+            >
               <motion.a
                 href="/appointment"
                 className="btn btn-primary"
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
               >
                 Book a Session
@@ -37,13 +62,18 @@ function Hero() {
               <motion.a
                 href="/know_more"
                 className="btn btn-light"
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
               >
                 Learn More
               </motion.a>
-            </div>
-            <div className="hero-features">
+            </motion.div>
+            <motion.div
+              className="hero-features"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+            >
               <div className="feature-item">
                 <CheckCircle size={20} />
                 <span>Licensed Professionals</span>
@@ -56,16 +86,19 @@ function Hero() {
                 <CheckCircle size={20} />
                 <span>Available 24/7</span>
               </div>
-            </div>
+            </motion.div>
           </motion.div>
 
           <motion.div
             className="hero-visual"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, delay: 0.2 }}
+            style={{ y: useTransform(scrollYProgress, [0, 1], ['0%', '30%']) }}
           >
-            <div className="visual-card card-main">
+            <motion.div
+              className="visual-card card-main"
+              initial={{ opacity: 0, scale: 0.8, rotateY: -15 }}
+              animate={{ opacity: 1, scale: 1, rotateY: 0 }}
+              transition={{ duration: 1, delay: 0.3 }}
+            >
               <div className="card-header">
                 <div className="avatar-group">
                   <div className="avatar">👨‍⚕️</div>
@@ -82,59 +115,16 @@ function Hero() {
                   <span className="rating-text">4.9/5 from 10,000+ clients</span>
                 </div>
               </div>
-            </div>
-
-            <motion.div
-              className="visual-card card-floating card-1"
-              animate={{
-                y: [0, -15, 0],
-              }}
-              transition={{
-                duration: 4,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-            >
-              <div className="mini-stat">
-                <div className="stat-number">98%</div>
-                <div className="stat-label">Success Rate</div>
-              </div>
             </motion.div>
 
             <motion.div
-              className="visual-card card-floating card-2"
-              animate={{
-                y: [0, -20, 0],
-              }}
-              transition={{
-                duration: 5,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: 1
-              }}
+              className="floating-image"
+              initial={{ opacity: 0, x: 50, rotate: -10 }}
+              animate={{ opacity: 1, x: 0, rotate: 0 }}
+              transition={{ duration: 1.2, delay: 0.5 }}
+              style={{ y: useTransform(scrollYProgress, [0, 1], ['0%', '-20%']) }}
             >
-              <div className="mini-stat">
-                <div className="stat-icon">🏆</div>
-                <div className="stat-text">Top Rated</div>
-              </div>
-            </motion.div>
-
-            <motion.div
-              className="visual-card card-floating card-3"
-              animate={{
-                y: [0, -12, 0],
-              }}
-              transition={{
-                duration: 3.5,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: 0.5
-              }}
-            >
-              <div className="mini-stat">
-                <div className="stat-icon">💬</div>
-                <div className="stat-text">Chat Support</div>
-              </div>
+              <img src={spotifySticker} alt="Mental wellness illustration" />
             </motion.div>
           </motion.div>
         </div>
