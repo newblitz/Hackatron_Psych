@@ -1,16 +1,15 @@
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import { Heart, Menu, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import '../styles/Navigation.css';
 
 function Navigation() {
   const [scrolled, setScrolled] = useState(false);
-  const [isAuthenticated] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+      setScrolled(window.scrollY > 50);
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
@@ -18,117 +17,73 @@ function Navigation() {
 
   const navLinks = [
     { name: 'How It Works', href: '/know_more' },
-    { name: 'Our Therapists', href: '#therapists' },
-    { name: 'Resources', href: '#resources' },
+    { name: 'Therapists', href: '#therapists' },
+    { name: 'About', href: '#about' },
     { name: 'Careers', href: '/internship' },
   ];
 
   return (
-    <motion.header
+    <motion.nav
       className={`navigation ${scrolled ? 'scrolled' : ''}`}
-      initial={{ y: -100, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      transition={{ duration: 0.6 }}
     >
-      <div className="nav-container">
-        <motion.a
-          href="/"
-          className="logo"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <div className="logo-icon">
-            <Heart size={24} fill="currentColor" />
+      <div className="container">
+        <div className="nav-content">
+          <a href="/" className="logo">
+            <span className="logo-text">MindEase</span>
+          </a>
+
+          <div className="nav-links">
+            {navLinks.map((link) => (
+              <a key={link.name} href={link.href} className="nav-link">
+                {link.name}
+              </a>
+            ))}
           </div>
-          <span className="logo-text">MindEase</span>
-        </motion.a>
 
-        <nav className="nav-links">
-          {navLinks.map((link, index) => (
-            <motion.a
-              key={link.name}
-              href={link.href}
-              className="nav-link"
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 + 0.2, duration: 0.5 }}
-              whileHover={{ y: -2 }}
-            >
-              {link.name}
-            </motion.a>
-          ))}
-        </nav>
+          <div className="nav-actions">
+            <a href="/create/login/" className="nav-login">
+              Sign In
+            </a>
+            <a href="/create/" className="btn btn-primary">
+              Get Started
+            </a>
+          </div>
 
-        <div className="nav-actions">
-          {isAuthenticated ? (
-            <>
-              <span className="user-badge">👤</span>
-              <motion.a
-                href="/logout"
-                className="btn btn-outline"
-                whileHover={{ scale: 1.05, y: -1 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                Logout
-              </motion.a>
-            </>
-          ) : (
-            <>
-              <motion.a
-                href="/create/login/"
-                className="nav-link-cta"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                Sign In
-              </motion.a>
-              <motion.a
-                href="/create/"
-                className="btn btn-primary"
-                whileHover={{ scale: 1.05, y: -1 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                Get Started
-              </motion.a>
-            </>
-          )}
+          <button
+            className="mobile-menu-btn"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
         </div>
 
-        <motion.button
-          className="mobile-menu-btn"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          whileTap={{ scale: 0.9 }}
-        >
-          {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-        </motion.button>
-      </div>
-
-      {mobileMenuOpen && (
-        <motion.div
-          className="mobile-menu"
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: 'auto' }}
-          exit={{ opacity: 0, height: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          <div className="mobile-menu-content">
+        {mobileMenuOpen && (
+          <motion.div
+            className="mobile-menu"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+          >
             {navLinks.map((link) => (
               <a key={link.name} href={link.href} className="mobile-link">
                 {link.name}
               </a>
             ))}
             <div className="mobile-actions">
-              <a href="/create/login/" className="mobile-action secondary">
+              <a href="/create/login/" className="btn btn-secondary">
                 Sign In
               </a>
-              <a href="/create/" className="mobile-action primary">
+              <a href="/create/" className="btn btn-primary">
                 Get Started
               </a>
             </div>
-          </div>
-        </motion.div>
-      )}
-    </motion.header>
+          </motion.div>
+        )}
+      </div>
+    </motion.nav>
   );
 }
 

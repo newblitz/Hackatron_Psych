@@ -1,270 +1,110 @@
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { ArrowRight, Heart, Sparkles, Shield } from 'lucide-react';
-import { useRef } from 'react';
+import { motion } from 'framer-motion';
+import { ArrowRight, CheckCircle } from 'lucide-react';
 import '../styles/Hero.css';
 
 function Hero() {
-  const ref = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ['start start', 'end start'],
-  });
-
-  const y = useTransform(scrollYProgress, [0, 1], ['0%', '30%']);
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
-
   return (
-    <section ref={ref} className="hero">
-      <div className="hero-background">
-        <motion.div
-          className="blob blob-1"
-          style={{ y }}
-          animate={{
-            scale: [1, 1.2, 1],
-            rotate: [0, 90, 0],
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        />
-        <motion.div
-          className="blob blob-2"
-          animate={{
-            scale: [1, 1.1, 1],
-            rotate: [0, -90, 0],
-          }}
-          transition={{
-            duration: 15,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 2
-          }}
-        />
-        <motion.div
-          className="blob blob-3"
-          animate={{
-            scale: [1, 1.15, 1],
-            rotate: [0, 45, 0],
-          }}
-          transition={{
-            duration: 25,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 5
-          }}
-        />
-      </div>
+    <section className="hero">
+      <div className="hero-gradient" />
 
-      <div className="hero-container">
-        <motion.div
-          className="hero-content"
-          style={{ opacity }}
-        >
+      <div className="container">
+        <div className="hero-content">
           <motion.div
-            className="hero-badge"
-            initial={{ opacity: 0, scale: 0.8, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 0.6, type: "spring", bounce: 0.5 }}
-          >
-            <Sparkles size={16} />
-            <span>Your Safe Space for Mental Wellness</span>
-          </motion.div>
-
-          <motion.h1
-            className="hero-title"
+            className="hero-text"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
+            transition={{ duration: 0.8 }}
           >
-            Find peace, one
-            <br />
-            <span className="gradient-text">conversation</span> at a time
-          </motion.h1>
-
-          <motion.p
-            className="hero-description"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-          >
-            Connect with compassionate therapists who truly understand you.
-            Start your journey to a healthier, happier you today.
-          </motion.p>
-
-          <motion.div
-            className="hero-actions"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-          >
-            <motion.a
-              href="/appointment"
-              className="btn btn-primary"
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              Start Free Session
-              <ArrowRight size={20} />
-            </motion.a>
-
-            <motion.a
-              href="/know_more"
-              className="btn btn-ghost"
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              How It Works
-            </motion.a>
-          </motion.div>
-
-          <motion.div
-            className="hero-stats"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 0.8 }}
-          >
-            <div className="stat-item">
-              <Heart size={20} className="stat-icon" />
-              <div>
-                <div className="stat-value">10,000+</div>
-                <div className="stat-label">Lives Changed</div>
-              </div>
+            <h1 className="hero-title">
+              Your Mental Wellness,
+              <br />
+              Our Priority
+            </h1>
+            <p className="hero-description">
+              Connect with licensed therapists and counselors who understand your journey.
+              Start your path to better mental health today.
+            </p>
+            <div className="hero-buttons">
+              <motion.a
+                href="/appointment"
+                className="btn btn-primary"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Book a Session
+                <ArrowRight size={20} />
+              </motion.a>
+              <motion.a
+                href="/know_more"
+                className="btn btn-light"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Learn More
+              </motion.a>
             </div>
-            <div className="stat-divider" />
-            <div className="stat-item">
-              <Sparkles size={20} className="stat-icon" />
-              <div>
-                <div className="stat-value">4.9/5</div>
-                <div className="stat-label">Client Rating</div>
+            <div className="hero-features">
+              <div className="feature-item">
+                <CheckCircle size={20} />
+                <span>Licensed Professionals</span>
               </div>
-            </div>
-            <div className="stat-divider" />
-            <div className="stat-item">
-              <Shield size={20} className="stat-icon" />
-              <div>
-                <div className="stat-value">100%</div>
-                <div className="stat-label">Confidential</div>
+              <div className="feature-item">
+                <CheckCircle size={20} />
+                <span>100% Confidential</span>
+              </div>
+              <div className="feature-item">
+                <CheckCircle size={20} />
+                <span>Available 24/7</span>
               </div>
             </div>
           </motion.div>
-        </motion.div>
 
-        <motion.div
-          className="hero-visual"
-          initial={{ opacity: 0, scale: 0.8, x: 50 }}
-          animate={{ opacity: 1, scale: 1, x: 0 }}
-          transition={{ duration: 1, delay: 0.3 }}
-        >
-          <div className="illustration-container">
+          <motion.div
+            className="hero-visual"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1, delay: 0.2 }}
+          >
+            <div className="visual-card card-main">
+              <div className="card-header">
+                <div className="avatar-group">
+                  <div className="avatar">👨‍⚕️</div>
+                  <div className="avatar">👩‍⚕️</div>
+                  <div className="avatar">🧑‍⚕️</div>
+                </div>
+                <span className="status-badge">Online Now</span>
+              </div>
+              <div className="card-body">
+                <h3>Connect with Experts</h3>
+                <p>Choose from 500+ licensed therapists ready to help you today</p>
+                <div className="rating">
+                  <span className="stars">⭐⭐⭐⭐⭐</span>
+                  <span className="rating-text">4.9/5 from 10,000+ clients</span>
+                </div>
+              </div>
+            </div>
+
             <motion.div
-              className="glass-card main-card"
+              className="visual-card card-floating card-1"
               animate={{
                 y: [0, -15, 0],
-              }}
-              transition={{
-                duration: 6,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-            >
-              <div className="card-icon-wrapper">
-                <div className="meditation-icon">🧘‍♀️</div>
-              </div>
-              <h3>Begin Your Journey</h3>
-              <p>Personalized care from licensed professionals</p>
-              <div className="progress-bar">
-                <motion.div
-                  className="progress-fill"
-                  initial={{ width: 0 }}
-                  animate={{ width: "80%" }}
-                  transition={{ duration: 2, delay: 1 }}
-                />
-              </div>
-              <div className="card-footer">
-                <span className="progress-text">80% Complete</span>
-                <span className="progress-emoji">✨</span>
-              </div>
-            </motion.div>
-
-            <motion.div
-              className="glass-card floating-card card-1"
-              animate={{
-                y: [0, -20, 0],
-                rotate: [-2, 2, -2],
-              }}
-              transition={{
-                duration: 5,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: 0.5
-              }}
-            >
-              <div className="mini-icon">💬</div>
-              <div className="mini-text">
-                <strong>Chat Anytime</strong>
-                <span>24/7 Support</span>
-              </div>
-            </motion.div>
-
-            <motion.div
-              className="glass-card floating-card card-2"
-              animate={{
-                y: [0, -25, 0],
-                rotate: [2, -2, 2],
-              }}
-              transition={{
-                duration: 7,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: 1
-              }}
-            >
-              <div className="mini-icon">🎯</div>
-              <div className="mini-text">
-                <strong>Track Goals</strong>
-                <span>See Progress</span>
-              </div>
-            </motion.div>
-
-            <motion.div
-              className="glass-card floating-card card-3"
-              animate={{
-                y: [0, -18, 0],
-                rotate: [-3, 3, -3],
-              }}
-              transition={{
-                duration: 6,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: 1.5
-              }}
-            >
-              <div className="mini-icon">🌟</div>
-              <div className="mini-text">
-                <strong>Feel Better</strong>
-                <span>Real Results</span>
-              </div>
-            </motion.div>
-
-            <motion.div
-              className="decoration-circle circle-1"
-              animate={{
-                scale: [1, 1.2, 1],
-                opacity: [0.3, 0.6, 0.3],
               }}
               transition={{
                 duration: 4,
                 repeat: Infinity,
                 ease: "easeInOut"
               }}
-            />
+            >
+              <div className="mini-stat">
+                <div className="stat-number">98%</div>
+                <div className="stat-label">Success Rate</div>
+              </div>
+            </motion.div>
+
             <motion.div
-              className="decoration-circle circle-2"
+              className="visual-card card-floating card-2"
               animate={{
-                scale: [1, 1.3, 1],
-                opacity: [0.2, 0.5, 0.2],
+                y: [0, -20, 0],
               }}
               transition={{
                 duration: 5,
@@ -272,9 +112,32 @@ function Hero() {
                 ease: "easeInOut",
                 delay: 1
               }}
-            />
-          </div>
-        </motion.div>
+            >
+              <div className="mini-stat">
+                <div className="stat-icon">🏆</div>
+                <div className="stat-text">Top Rated</div>
+              </div>
+            </motion.div>
+
+            <motion.div
+              className="visual-card card-floating card-3"
+              animate={{
+                y: [0, -12, 0],
+              }}
+              transition={{
+                duration: 3.5,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: 0.5
+              }}
+            >
+              <div className="mini-stat">
+                <div className="stat-icon">💬</div>
+                <div className="stat-text">Chat Support</div>
+              </div>
+            </motion.div>
+          </motion.div>
+        </div>
       </div>
     </section>
   );
